@@ -1,0 +1,8 @@
+# Mark all images and videos as binary to prevent corruption during git operations
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.mp4 binary
+*.webp binary
+*.ico binary
