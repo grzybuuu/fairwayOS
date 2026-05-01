@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "motion/react";
-import { Cpu, Globe, Trophy, Smartphone, MapPin, Zap, ChevronRight, BarChart3, Database, ShieldCheck, Activity, Target, Layers, Linkedin, ArrowUpRight, Timer } from "lucide-react";
+import { Cpu, Globe, Trophy, Smartphone, MapPin, Zap, ChevronRight, BarChart3, Database, ShieldCheck, Activity, Target, Layers, Linkedin, ArrowUpRight, Timer, TrendingUp, Clock, Users } from "lucide-react";
 import { ResponsiveContainer, AreaChart, Area } from "recharts";
 import { useState, useEffect, useRef } from "react";
 import React from "react";
@@ -37,8 +37,8 @@ const LoopingVideo = ({ src, className }: { src: string; className?: string }) =
 
 const HUDOverlay = () => (
   <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
-    <div className="absolute top-10 left-10 w-20 h-20 border-t-2 border-l-2 border-golf-accent/30 rounded-tl-3xl" />
-    <div className="absolute top-10 right-10 w-20 h-20 border-t-2 border-r-2 border-golf-accent/30 rounded-tr-3xl" />
+    <div className="absolute top-20 left-10 w-20 h-20 border-t-2 border-l-2 border-golf-accent/30 rounded-tl-3xl" />
+    <div className="absolute top-20 right-10 w-20 h-20 border-t-2 border-r-2 border-golf-accent/30 rounded-tr-3xl" />
     <div className="absolute bottom-10 left-10 w-20 h-20 border-b-2 border-l-2 border-golf-accent/30 rounded-bl-3xl" />
     <div className="absolute bottom-10 right-10 w-20 h-20 border-b-2 border-r-2 border-golf-accent/30 rounded-br-3xl" />
   </div>
@@ -55,9 +55,10 @@ const Navbar = ({ onNavClick, showLinks }: { onNavClick: (e: React.MouseEvent<HT
     {showLinks && (
       <div className="hidden md:flex gap-8 text-sm font-medium text-white/70 uppercase tracking-widest">
         <a href="#vision" onClick={(e) => onNavClick(e, 'vision')} className="hover:text-white transition-colors">Vision</a>
-        <a href="#tech" onClick={(e) => onNavClick(e, 'tech')} className="hover:text-white transition-colors">Technology</a>
-        <a href="#leagues" onClick={(e) => onNavClick(e, 'leagues')} className="hover:text-white transition-colors">Leagues</a>
-        <a href="#business" onClick={(e) => onNavClick(e, 'business')} className="hover:text-white transition-colors">Business</a>
+        <a href="#leagues" onClick={(e) => onNavClick(e, 'leagues')} className="hover:text-white transition-colors">E-Sport</a>
+        <a href="#business" onClick={(e) => onNavClick(e, 'business')} className="hover:text-white transition-colors">Finance</a>
+        <a href="#tech" onClick={(e) => onNavClick(e, 'tech')} className="hover:text-white transition-colors">Tech</a>
+        <a href="#facility-owners" onClick={(e) => onNavClick(e, 'facility-owners')} className="hover:text-white transition-colors">Partnership</a>
       </div>
     )}
     <a 
@@ -70,9 +71,8 @@ const Navbar = ({ onNavClick, showLinks }: { onNavClick: (e: React.MouseEvent<HT
   </nav>
 );
 
-const Hero = ({ onSlideComplete }: { onSlideComplete: () => void }) => {
+const Hero = () => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [sliderPos, setSliderPos] = useState(0);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -124,32 +124,29 @@ const Hero = ({ onSlideComplete }: { onSlideComplete: () => void }) => {
           Transforming physical play into a high-precision digital experience.
         </p>
 
-        {/* Slide to Explore Button */}
-        <div className="relative w-64 md:w-80 h-16 glass-dark rounded-full border border-white/20 p-1 group mx-auto">
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none translate-x-4">
-            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/30 group-hover:text-white/50 transition-colors">
-              {sliderPos > 200 ? "Release to Explore" : "Explore Ecosystem"}
-            </span>
+        {/* Scroll Indicator */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="flex flex-col items-center gap-4 mt-12"
+        >
+          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/20">Scroll to Explore</span>
+          <div className="w-[2px] h-12 bg-white/10 rounded-full relative overflow-hidden">
+            <motion.div 
+              animate={{ 
+                y: [0, 48, 0],
+                opacity: [0, 1, 0]
+              }}
+              transition={{ 
+                duration: 2, 
+                repeat: Infinity,
+                ease: "easeInOut" 
+              }}
+              className="absolute top-0 left-0 w-full h-1/3 bg-golf-accent rounded-full"
+            />
           </div>
-          <motion.div
-            drag="x"
-            dragConstraints={{ left: 0, right: 260 }}
-            dragElastic={0}
-            dragMomentum={false}
-            onDrag={(_, info) => setSliderPos(info.offset.x)}
-            onDragEnd={(_, info) => {
-              if (info.offset.x >= 250) {
-                onSlideComplete();
-              } else {
-                setSliderPos(0);
-              }
-            }}
-            animate={{ x: sliderPos === 0 ? 0 : undefined }}
-            className="w-14 h-14 bg-golf-accent rounded-full flex items-center justify-center text-golf-dark cursor-grab active:cursor-grabbing shadow-[0_0_20px_rgba(163,230,53,0.4)] relative z-10"
-          >
-            <ChevronRight size={24} />
-          </motion.div>
-        </div>
+        </motion.div>
       </motion.div>
 
       <div className="absolute inset-0 opacity-10 pointer-events-none" 
@@ -176,9 +173,67 @@ const FeatureCard = ({ icon: Icon, title, desc, delay = 0 }) => (
   </motion.div>
 );
 
-const TechShowcase = () => (
-  <section id="tech" className="py-24 px-6 relative overflow-hidden">
+const OwnerBenefitsSection = () => (
+  <section id="facility-owners" className="py-32 px-6 relative overflow-hidden bg-golf-dark border-t border-white/5">
+    <div className="max-w-7xl mx-auto relative z-10">
+      <div className="text-center mb-24">
+        <h3 className="text-xl font-bold mb-6 uppercase tracking-[0.3em] text-golf-accent font-display">Strategic Partnership</h3>
+        <h2 className="text-5xl md:text-7xl font-bold mb-8 italic">Maximize ROI. <br /><span className="text-white/40">Elevate Prestige.</span></h2>
+        <p className="text-lg text-white/50 max-w-2xl mx-auto font-light">
+          FairwayOS transforms traditional golf courses into high-utilization tech hubs, maximizing throughput while offering unprecedented player analytics.
+        </p>
+      </div>
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {[
+          {
+            icon: <TrendingUp className="text-golf-accent" size={24} />,
+            title: "Higher Revenue",
+            desc: "Increased throughput through automated tracking and faster game pacing.",
+            metric: "+15% YoY Revenue"
+          },
+          {
+            icon: <Clock className="text-golf-accent" size={24} />,
+            title: "Optimized Velocity",
+            desc: "Reduced search time and faster transit leads to ~10% more daily slots.",
+            metric: "60min Faster Rounds"
+          },
+          {
+            icon: <Zap className="text-golf-accent" size={24} />,
+            title: "Tech Magnet",
+            desc: "Attract a new generation of players with high-tech analytics and augmented play.",
+            metric: "98% User Sat."
+          },
+          {
+            icon: <Users className="text-golf-accent" size={24} />,
+            title: "Active Community",
+            desc: "Host global leagues, virtual tournaments, and persistent local leaderboards.",
+            metric: "3x Player Retention"
+          }
+        ].map((benefit, i) => (
+          <div key={i} className="glass-dark p-8 rounded-[2.5rem] border border-white/10 hover:border-golf-accent/30 transition-all group">
+            <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-8 group-hover:bg-golf-accent/10 transition-colors">
+              {benefit.icon}
+            </div>
+            <h4 className="text-xl font-bold mb-4">{benefit.title}</h4>
+            <p className="text-sm text-white/40 leading-relaxed mb-8">{benefit.desc}</p>
+            <div className="pt-6 border-t border-white/5">
+              <span className="text-xs font-bold uppercase tracking-widest text-golf-accent">{benefit.metric}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const TechShowcase = ({ onLearnMore }: { onLearnMore: () => void }) => (
+  <section id="tech" className="py-32 px-6 relative overflow-hidden bg-black/30 border-t border-white/5">
+    <HUDOverlay />
     <div className="absolute top-0 right-0 w-1/2 h-full bg-golf-accent/5 blur-[150px] -z-10" />
+    <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+      style={{ backgroundImage: 'radial-gradient(circle, #a3e635 1px, transparent 1px)', backgroundSize: '60px 60px' }} 
+    />
     <div className="max-w-7xl mx-auto">
       <div className="grid lg:grid-cols-2 gap-16 items-center">
         <div>
@@ -186,11 +241,11 @@ const TechShowcase = () => (
             Digital Heart. <br />
             <span className="text-golf-accent text-gradient">Classic Form.</span>
           </h2>
-          <p className="text-lg text-white/50 mb-12 font-light leading-relaxed">
+          <p className="text-lg text-white/50 mb-10 font-light leading-relaxed font-display">
             Our Smart Ball technology preserves the weight, flight, and feel of tour-grade balls while embedding high-precision sensors.
           </p>
           
-          <div className="glass-dark p-6 rounded-3xl mb-12 border border-white/10">
+          <div className="glass-dark p-6 rounded-3xl mb-8 border border-white/10">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
                 <Activity size={16} className="text-golf-accent animate-pulse" />
@@ -257,11 +312,6 @@ const TechShowcase = () => (
 
         <div className="relative">
           <motion.div 
-            animate={{ 
-              rotate: [0, 5, -5, 0],
-              y: [0, -10, 10, 0]
-            }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
             className="aspect-square relative"
           >
             <div className="absolute inset-0 bg-golf-accent/20 blur-[120px] rounded-full scale-75" />
@@ -271,7 +321,7 @@ const TechShowcase = () => (
                 <img 
                   src="/telefon.png" 
                   alt="FairwayOS Mobile" 
-                  className="w-full h-full object-cover mix-blend-multiply scale-110 group-hover:scale-125 transition-transform duration-700"
+                  className="w-full h-full object-cover mix-blend-multiply"
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 border-8 border-dashed border-golf-accent/30 rounded-full animate-[spin_20s_linear_infinite] pointer-events-none" />
@@ -298,13 +348,26 @@ const TechShowcase = () => (
           </div>
         </div>
       </div>
+
+      <div className="mt-20 flex justify-center">
+        <button 
+          id="learn-more-trigger"
+          onClick={onLearnMore}
+          className="inline-flex items-center gap-4 bg-white/5 hover:bg-golf-accent hover:text-golf-dark text-white px-10 py-5 rounded-2xl font-bold uppercase tracking-widest text-xs transition-all border border-white/10 hover:border-golf-accent hover:scale-105 active:scale-95 group shadow-2xl"
+        >
+          Learn more
+          <div className="w-8 h-8 rounded-full bg-white/10 group-hover:bg-golf-dark/10 flex items-center justify-center transition-colors">
+            <ChevronRight size={16} />
+          </div>
+        </button>
+      </div>
     </div>
   </section>
 );
 
 const LeaguesSection = () => (
-  <section id="leagues" className="py-24 px-6 bg-black/30 relative">
-    <HUDOverlay />
+  <section id="leagues" className="py-24 px-6 relative overflow-hidden">
+    <div className="absolute inset-0 bg-golf-accent/5 -z-10" />
     <div className="max-w-7xl mx-auto text-center mb-20 relative z-10">
        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-neon/30 bg-golf-neon/5 text-golf-neon text-[10px] font-bold uppercase tracking-[0.2em] mb-6">
          Global Networking
@@ -339,7 +402,6 @@ const LeaguesSection = () => (
         <h4 className="font-mono text-golf-accent mb-4 text-xs tracking-widest italic">LIVE COMBAT</h4>
         <h3 className="text-2xl font-bold mb-4">High Stakes Duels</h3>
         <p className="text-white/70 text-sm mb-10 leading-relaxed">The ultimate test. Synchronized 1v1 matches across continents. Video verified Anti-Cheat system.</p>
-        <button className="w-full bg-golf-accent text-golf-dark py-4 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-white transition-all hover:scale-[1.02] shadow-xl">Join Pro-Am</button>
       </div>
 
       <div className="glass p-12 rounded-[2.5rem] border-t-2 border-t-white/10 group hover:bg-white/5 transition-colors">
@@ -358,29 +420,13 @@ const LeaguesSection = () => (
   </section>
 );
 
-const StatsSection = () => (
-  <section className="py-24 border-y border-white/5 relative bg-golf-dark">
-    <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 px-6">
-      {[
-        { label: "Global Courses", value: "40k+" },
-        { label: "Market Size", value: "$13B" },
-        { label: "Target ROI", value: "9 Months" },
-        { label: "Throughput", value: "+10%" }
-      ].map((s, i) => (
-        <div key={i} className="text-center group">
-          <div className="text-4xl md:text-5xl font-extrabold text-white mb-2 group-hover:text-golf-accent transition-colors duration-500">{s.value}</div>
-          <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/30 group-hover:text-white/60 transition-colors">{s.label}</div>
-        </div>
-      ))}
-    </div>
-  </section>
-);
 
 const InfrastructureView = ({ onBack }: { onBack: () => void }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     setIsLoaded(true);
+    window.scrollTo(0, 0);
   }, []);
 
   return (
@@ -457,8 +503,53 @@ const InfrastructureView = ({ onBack }: { onBack: () => void }) => {
         </div>
       </section>
 
+      {/* Smart Ball Section */}
+      <section className="py-32 px-6 border-t border-white/5 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-golf-accent/5 blur-[100px] -z-10" />
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="order-2 lg:order-1 relative aspect-square lg:h-[600px] w-full glass rounded-[4rem] border border-white/10 overflow-hidden group bg-black/20 flex items-center justify-center">
+               <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(163,230,53,0.1),transparent_70%)] animate-pulse" />
+               <img 
+                 src="/ball.png" 
+                 alt="Smart Ball Technology" 
+                 className="w-full h-full object-contain p-12 transition-transform duration-700 group-hover:scale-110 drop-shadow-[0_0_35px_rgba(163,230,53,0.2)]"
+                 referrerPolicy="no-referrer"
+               />
+               <div className="absolute inset-0 border-[20px] border-white/[0.02] rounded-[4rem] pointer-events-none" />
+            </div>
+            
+            <div className="order-1 lg:order-2">
+              <div className="text-xl font-mono text-golf-accent mb-4 tracking-widest uppercase">The Hardware</div>
+              <h2 className="text-5xl md:text-6xl font-bold mb-8 italic">Smart <span className="text-golf-accent">Ball.</span></h2>
+              <p className="text-xl text-white/50 leading-relaxed font-light mb-10">
+                A tour-grade professional golf ball, re-engineered for the digital age. Embedded with a resilient micro-telemetry unit, it tracks spin, velocity, and 3D trajectory without compromising the "classic feel."
+              </p>
+              
+              <div className="flex flex-wrap gap-4 mb-10">
+                 {['Tour-Grade Polyurethane', '3-Piece Core', 'Micro-Telemetry Unit', 'Inductive Charging'].map((tag, i) => (
+                    <div key={i} className="px-4 py-2 rounded-full border border-white/10 text-[10px] font-bold uppercase tracking-widest bg-white/5">{tag}</div>
+                 ))}
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-6 glass rounded-2xl border border-white/5">
+                   <div className="text-3xl font-black text-white mb-1">3000G</div>
+                   <div className="text-[10px] font-bold text-white/30 uppercase tracking-widest">Impact Resistance</div>
+                </div>
+                <div className="p-6 glass rounded-2xl border border-white/5">
+                   <div className="text-3xl font-black text-golf-accent mb-1">10H+</div>
+                   <div className="text-[10px] font-bold text-white/30 uppercase tracking-widest">Battery Life</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Secondary Logistics Section */}
       <section className="py-32 px-6 bg-black/40 border-t border-white/5 relative overflow-hidden">
+        <HUDOverlay />
         <div className="absolute top-0 left-0 w-64 h-64 bg-golf-accent/5 blur-[100px] -z-10" />
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
@@ -527,17 +618,26 @@ const InfrastructureView = ({ onBack }: { onBack: () => void }) => {
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'landing' | 'infrastructure'>('landing');
+  const [scrollTarget, setScrollTarget] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (currentView === 'landing' && scrollTarget) {
+      const timer = setTimeout(() => {
+        const element = document.getElementById(scrollTarget);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        setScrollTarget(null);
+      }, 600);
+      return () => clearTimeout(timer);
+    }
+  }, [currentView, scrollTarget]);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     if (currentView !== 'landing') {
+      setScrollTarget(id);
       setCurrentView('landing');
-      setTimeout(() => {
-        const element = document.getElementById(id);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 500); // Wait for transition
     } else {
       const element = document.getElementById(id);
       if (element) {
@@ -559,15 +659,14 @@ export default function App() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <Hero onSlideComplete={() => setCurrentView('infrastructure')} />
-            <StatsSection />
+            <Hero />
             
-            <section id="vision" className="py-24 px-6 relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-full bg-golf-accent/5 -z-10" />
+            <section id="vision" className="py-24 px-6 relative overflow-hidden bg-golf-dark">
+              <div className="absolute top-0 left-0 w-full h-full bg-golf-accent/[0.03] -z-10" />
               <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-20">
-                  <h2 className="text-4xl md:text-6xl font-bold mb-6">Decoupling <span className="text-golf-accent">Latency.</span></h2>
-                  <p className="text-white/40 max-w-xl mx-auto italic font-light">The analog world is too slow. FairwayOS digitizes the game in real-time, removing the friction from the fairway.</p>
+                  <h2 className="text-4xl md:text-6xl font-bold mb-6 italic">Decoupling <span className="text-golf-accent font-black tracking-tighter">Latency.</span></h2>
+                  <p className="text-white/40 max-w-xl mx-auto italic font-light text-lg">The analog world is too slow. FairwayOS digitizes the game in real-time, removing the friction from every fairway.</p>
                 </div>
                 <div className="grid md:grid-cols-3 gap-8">
                   <FeatureCard 
@@ -592,107 +691,150 @@ export default function App() {
               </div>
             </section>
 
-            <TechShowcase />
             <LeaguesSection />
 
-            <section id="business" className="py-24 px-6 overflow-hidden">
-              <div className="max-w-7xl mx-auto glass p-12 md:p-24 rounded-[4rem] relative">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-golf-accent/10 blur-[100px] -z-10" />
-                <div className="grid md:grid-cols-2 gap-20 items-center">
+            <section id="business" className="py-24 px-6 overflow-hidden bg-golf-dark relative">
+              <div className="max-w-7xl mx-auto glass p-12 md:p-24 rounded-[4rem] relative overflow-hidden border border-white/5">
+                <div className="absolute top-0 right-0 w-96 h-96 bg-golf-accent/5 blur-[120px] -z-10" />
+                <div className="grid lg:grid-cols-2 gap-20 items-center">
                   <div>
-                    <div className="text-golf-accent font-mono text-sm tracking-[0.4em] mb-4 uppercase">Commercial Strategy</div>
-                    <h2 className="text-4xl md:text-5xl font-bold mb-8 italic">Stability & Scalability.</h2>
+                    <div className="text-golf-accent font-mono text-sm tracking-[0.4em] mb-4 uppercase">Financial Projection</div>
+                    <h2 className="text-4xl md:text-5xl font-bold mb-8 italic">B2B2C <span className="text-white">Revenue Synergy.</span></h2>
                     <p className="text-white/50 mb-10 font-light text-lg leading-relaxed">
-                      FairwayOS offers a predictable revenue model for course owners while opening new monetization channels through global leagues.
+                      We empower golf courses with physical infrastructure, turning traditional greens into high-yield digital assets. Courses provide smart balls to golfers; we scale the e-sports ecosystem together.
                     </p>
                     <div className="space-y-6">
-                      <div className="flex items-center gap-5 group">
-                        <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-golf-accent group-hover:bg-golf-accent group-hover:text-golf-dark transition-all">
-                          <ShieldCheck size={18} />
+                      <div className="flex items-start gap-5 group">
+                        <div className="mt-1 w-12 h-12 shrink-0 rounded-2xl bg-white/5 flex items-center justify-center text-golf-accent group-hover:bg-golf-accent group-hover:text-golf-dark transition-all">
+                          <Database size={20} />
                         </div>
                         <div>
-                          <div className="font-bold">B2B SaaS Model</div>
-                          <div className="text-sm text-white/40">$2,500/mo subscription per course</div>
+                          <div className="font-bold text-xl mb-1">Infrastructure-as-a-Service</div>
+                          <p className="text-sm text-white/40 leading-relaxed">Fixed monthly subscription for solar-mesh coverage. Predictable OPEX for course operators with zero upfront hardware risk.</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-5 group">
-                        <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-golf-accent group-hover:bg-golf-accent group-hover:text-golf-dark transition-all">
-                          <Activity size={18} />
+                      <div className="flex items-start gap-5 group">
+                        <div className="mt-1 w-12 h-12 shrink-0 rounded-2xl bg-white/5 flex items-center justify-center text-golf-accent group-hover:bg-golf-accent group-hover:text-golf-dark transition-all">
+                          <Smartphone size={20} />
                         </div>
                         <div>
-                          <div className="font-bold">Tournament Marketplace</div>
-                          <div className="text-sm text-white/40">10-15% commission on league fees</div>
+                          <div className="font-bold text-xl mb-1">B2C Micro-Transactions</div>
+                          <p className="text-sm text-white/40 leading-relaxed">Gamified ball rentals through Smart Hive lockers. Revenue sharing model where courses earn from every digital session recorded on their grass.</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-5 group">
-                        <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-golf-accent group-hover:bg-golf-accent group-hover:text-golf-dark transition-all">
-                          <Trophy size={18} />
+                      <div className="flex items-start gap-5 group">
+                        <div className="mt-1 w-12 h-12 shrink-0 rounded-2xl bg-white/5 flex items-center justify-center text-golf-accent group-hover:bg-golf-accent group-hover:text-golf-dark transition-all">
+                          <TrendingUp size={20} />
                         </div>
                         <div>
-                          <div className="font-bold">Hardware Payback</div>
-                          <div className="text-sm text-white/40">ROI achieved in approximately 9 months</div>
+                          <div className="font-bold text-xl mb-1">E-Sport Scaling</div>
+                          <p className="text-sm text-white/40 leading-relaxed">Global tournament fees and brand sponsorships. 10-15% commission on the world's first unified digital-physical golf ranking system.</p>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div id="leadership" className="md:border-l border-white/10 md:pl-20">
-                    <h3 className="text-xl font-bold mb-10 uppercase tracking-widest text-golf-accent flex items-center gap-3">
-                      <div className="w-2 h-2 bg-golf-accent rounded-full shadow-[0_0_8px_#a3e635]" />
-                      Leadership
-                    </h3>
-                    <div className="space-y-12">
-                      <div className="relative group">
-                        <div className="flex items-center gap-3">
-                          <h4 className="text-2xl font-bold transition-colors">Hugo Piber-Dąbrowski</h4>
-                          <a href="https://www.linkedin.com/in/hugo-piber-dąbrowski-b4b96231a/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 flex items-center justify-center rounded-full bg-[#0077b5]/10 text-[#0077b5] transition-all hover:bg-[#0077b5] hover:text-white">
-                            <Linkedin size={14} />
-                          </a>
+                  
+                  <div className="glass-dark p-10 rounded-[3rem] border border-white/10 shadow-2xl relative overflow-hidden">
+                     <div className="absolute top-0 right-0 w-32 h-32 bg-golf-accent/5 blur-3xl" />
+                     <h3 className="text-2xl font-bold mb-8 italic">Projected ROI</h3>
+                     <div className="space-y-8">
+                        <div>
+                           <div className="flex justify-between text-xs font-bold uppercase tracking-widest mb-3 text-white/40">
+                              <span>Market Adoption</span>
+                              <span className="text-golf-accent">Year 2 Target</span>
+                           </div>
+                           <div className="h-3 w-full bg-white/5 rounded-full overflow-hidden p-0.5 border border-white/10">
+                              <motion.div 
+                                 initial={{ width: 0 }}
+                                 whileInView={{ width: '65%' }}
+                                 viewport={{ once: true }}
+                                 transition={{ duration: 1.5, delay: 0.5 }}
+                                 className="h-full bg-golf-accent rounded-full shadow-[0_0_15px_rgba(163,230,53,0.5)]" 
+                              />
+                           </div>
                         </div>
-                        <p className="text-sm text-white/40 uppercase tracking-widest mt-2 font-medium">AI & R&D Lead | Big Data @ SGH</p>
-                        <p className="text-xs text-white/20 mt-2 italic">Expert in RL Algorithms & UWB Mesh Networks</p>
-                        <div className="mt-4 space-y-1">
-                          <p className="text-xs text-golf-accent/70 font-mono">hugo@fairwayos.com</p>
-                          <p className="text-xs text-white/40 font-mono">+48 500 000 000</p>
+                        <div className="grid grid-cols-2 gap-6">
+                           <div className="p-6 glass rounded-2xl border border-white/5">
+                              <div className="text-3xl font-black text-white mb-1">9.2M</div>
+                              <div className="text-[10px] font-bold text-white/30 uppercase tracking-widest">Active Players</div>
+                           </div>
+                           <div className="p-6 glass rounded-2xl border border-white/5">
+                              <div className="text-3xl font-black text-golf-accent mb-1">$42M</div>
+                              <div className="text-[10px] font-bold text-white/30 uppercase tracking-widest">ARR Forecast</div>
+                           </div>
                         </div>
+                        <p className="text-xs text-white/30 italic text-center font-light leading-relaxed">
+                           "FairwayOS isn't just hardware; it's a financial layer for the most expensive real-estate in sports."
+                        </p>
+                     </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <TechShowcase onLearnMore={() => setCurrentView('infrastructure')} />
+
+            <OwnerBenefitsSection />
+
+            <section id="leadership-section" className="py-32 px-6 relative overflow-hidden border-t border-white/5">
+              <div className="absolute inset-0 bg-golf-accent/5 -z-10" />
+              <div className="max-w-7xl mx-auto relative z-10">
+                <div id="leadership" className="max-w-4xl mx-auto">
+                  <h3 className="text-xl font-bold mb-16 uppercase tracking-widest text-golf-accent flex items-center justify-center gap-3">
+                    <div className="w-2 h-2 bg-golf-accent rounded-full shadow-[0_0_8px_#a3e635]" />
+                    Leadership
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-20">
+                    <div className="relative group text-center">
+                      <div className="flex items-center justify-center gap-3 mb-4">
+                        <h4 className="text-3xl font-bold transition-colors">Hugo Piber-Dąbrowski</h4>
+                        <a href="https://www.linkedin.com/in/hugo-piber-dąbrowski-b4b96231a/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 flex items-center justify-center rounded-full bg-[#0077b5]/10 text-[#0077b5] transition-all hover:bg-[#0077b5] hover:text-white">
+                          <Linkedin size={14} />
+                        </a>
                       </div>
-                      <div className="relative group">
-                        <div className="flex items-center gap-3">
-                          <h4 className="text-2xl font-bold transition-colors">Juliusz Grzybowski</h4>
-                          <a href="https://www.linkedin.com/in/juliusz-grzybowski/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 flex items-center justify-center rounded-full bg-[#0077b5]/10 text-[#0077b5] transition-all hover:bg-[#0077b5] hover:text-white">
-                            <Linkedin size={14} />
-                          </a>
-                        </div>
-                        <p className="text-sm text-white/40 uppercase tracking-widest mt-2 font-medium">CFO & Mobile Dev | Big Data @ SGH</p>
-                        <p className="text-xs text-white/20 mt-2 italic">Specializing in Business Analytics & Flutter</p>
-                        <div className="mt-4 space-y-1">
-                          <p className="text-xs text-golf-accent/70 font-mono">juliusz@fairwayos.com</p>
-                          <p className="text-xs text-white/40 font-mono">+48 600 000 000</p>
-                        </div>
+                      <p className="text-sm text-white/40 uppercase tracking-widest mb-3 font-medium">AI & R&D Lead | Big Data @ SGH</p>
+                      <p className="text-xs text-white/20 mb-6 italic leading-relaxed max-w-sm mx-auto">Expert in RL Algorithms & UWB Mesh Networks. Designing the core telemetry logic powering the OS.</p>
+                      <div className="flex flex-col items-center gap-1">
+                        <p className="text-xs text-golf-accent/70 font-mono">hugo@fairwayos.com</p>
+                        <p className="text-xs text-white/40 font-mono">+48 500 000 000</p>
+                      </div>
+                    </div>
+                    <div className="relative group text-center">
+                      <div className="flex items-center justify-center gap-3 mb-4">
+                        <h4 className="text-3xl font-bold transition-colors">Juliusz Grzybowski</h4>
+                        <a href="https://www.linkedin.com/in/juliusz-grzybowski/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 flex items-center justify-center rounded-full bg-[#0077b5]/10 text-[#0077b5] transition-all hover:bg-[#0077b5] hover:text-white">
+                          <Linkedin size={14} />
+                        </a>
+                      </div>
+                      <p className="text-sm text-white/40 uppercase tracking-widest mb-3 font-medium">CFO & Mobile Dev | Big Data @ SGH</p>
+                      <p className="text-xs text-white/20 mb-6 italic leading-relaxed max-w-sm mx-auto">Specializing in Business Analytics & Flutter. Scaling the ecosystem architecture and commercial strategy.</p>
+                      <div className="flex flex-col items-center gap-1">
+                        <p className="text-xs text-golf-accent/70 font-mono">juliusz@fairwayos.com</p>
+                        <p className="text-xs text-white/40 font-mono">+48 600 000 000</p>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </section>
+
           </motion.div>
         ) : (
-          <InfrastructureView onBack={() => setCurrentView('landing')} />
+          <InfrastructureView onBack={() => {
+            setScrollTarget('tech');
+            setCurrentView('landing');
+          }} />
         )}
       </AnimatePresence>
 
-      <footer className="py-24 px-6 border-t border-white/5 text-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-golf-accent/5 -z-10" />
+      <footer className="py-24 px-6 border-t border-white/5 text-center relative overflow-hidden bg-golf-dark">
         <div className="flex justify-center items-center gap-3 mb-10">
           <div className="w-8 h-8 bg-golf-accent/20 rounded-full flex items-center justify-center">
             <div className="w-2 h-2 bg-golf-accent rounded-full shadow-[0_0_10px_theme('colors.golf.accent')]" />
           </div>
           <span className="font-display font-bold text-2xl tracking-tighter uppercase">Fairway<span className="text-golf-accent">OS</span></span>
         </div>
-        <div className="flex justify-center gap-10 mb-12 text-xs font-bold uppercase tracking-widest text-white/40">
-          <a href="#" className="hover:text-golf-accent">Privacy</a>
-          <a href="#" className="hover:text-golf-accent">Terms</a>
-          <a href="#" className="hover:text-golf-accent">Press Kit</a>
-        </div>
+        {/* Removed Privacy, Terms, and Press Kit links per user request */}
         <p className="text-white/20 text-[10px] uppercase tracking-[0.5em] mb-4">Deep Tech from Poland | Scaling to USA</p>
         <p className="text-white/40 text-[10px]">© 2026 FairwayOS Technologies. ALL DATA ENCRYPTED.</p>
       </footer>
