@@ -708,34 +708,8 @@ const InfrastructureView = ({ onBack }: { onBack: () => void }) => {
                 <span className="text-golf-accent">for Golf"</span>
               </h2>
               <p className="text-white/70 font-light text-xl leading-relaxed mb-10">
-                Hardware simply collects data. Our AI Normalization Engine gives it meaning, replacing flawed, static handicap systems with real-time neural processing.
+                The process is simple: we simulate an AI agent in real-time environmental conditions to benchmark human performance against optimal play. These high-fidelity simulations generate a comprehensive tactical heatmap, identifying strategic optimization points and critical decision paths - forming the ultimate foundation for an AI caddie.
               </p>
-              
-              <div className="space-y-8">
-                <div className="flex gap-6">
-                  <div className="w-12 h-12 rounded-xl bg-golf-accent/10 flex items-center justify-center shrink-0 border border-golf-accent/20">
-                    <Grid size={24} className="text-golf-accent" />
-                  </div>
-                  <div>
-                    <h4 className="text-xl font-bold mb-2">3D Topography Mapping</h4>
-                    <p className="text-white/40 font-light leading-relaxed">
-                      Simulates optimal play using moisture, wind, and elevation, evaluating shots through reinforcement learning-based agents.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex gap-6">
-                  <div className="w-12 h-12 rounded-xl bg-golf-accent/10 flex items-center justify-center shrink-0 border border-golf-accent/20">
-                    <Trophy size={24} className="text-golf-accent" />
-                  </div>
-                  <div>
-                    <h4 className="text-xl font-bold mb-2">Global Fairness Standard</h4>
-                    <p className="text-white/40 font-light leading-relaxed">
-                      Mathematically ranks a player in a Polish storm against one in sunny Spain. The foundation of our global B2C leagues.
-                    </p>
-                  </div>
-                </div>
-              </div>
             </div>
 
             <div className="relative">
