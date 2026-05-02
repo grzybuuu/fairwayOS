@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import { Cpu, Globe, Trophy, Smartphone, MapPin, Zap, ChevronRight, BarChart3,
 Database, ShieldCheck, Activity, Target, Layers, Linkedin, ArrowUpRight, Timer,
-TrendingUp, Clock, Users, Network, Brain } from "lucide-react";
+TrendingUp, Clock, Users, Network, Brain, Grid } from "lucide-react";
 import { ResponsiveContainer, AreaChart, Area } from "recharts";
 import { useState, useEffect, useRef } from "react";
 import React from "react";
@@ -238,9 +238,8 @@ const OwnerBenefitsSection = () => (
 );
 
 const TechShowcase = ({ onLearnMore }: { onLearnMore: () => void }) => (
-  <section id="tech" className="py-32 px-6 relative overflow-hidden bg-black/30 border-t border-white/5">
-    <HUDOverlay />
-    <div className="absolute top-0 right-0 w-1/2 h-full bg-golf-accent/5 blur-[150px] -z-10" />
+  <section id="tech" className="py-32 px-6 relative overflow-hidden border-t border-white/5">
+    <div className="absolute inset-0 bg-golf-accent/5 -z-10" />
     <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
       style={{ backgroundImage: 'radial-gradient(circle, #a3e635 1px, transparent 1px)', backgroundSize: '60px 60px' }} 
     />
@@ -515,8 +514,9 @@ const BusinessSection = () => (
 );
 
 const LeaguesSection = () => (
-  <section id="leagues" className="py-24 px-6 relative overflow-hidden">
-    <div className="absolute inset-0 bg-golf-accent/5 -z-10" />
+  <section id="leagues" className="py-24 px-6 relative overflow-hidden bg-black/30 border-t border-white/5">
+    <HUDOverlay />
+    <div className="absolute top-0 right-0 w-1/2 h-full bg-golf-accent/5 blur-[150px] -z-10" />
     <div className="max-w-7xl mx-auto text-center mb-20 relative z-10">
        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-neon/30 bg-golf-neon/5 text-golf-neon text-[10px] font-bold uppercase tracking-[0.2em] mb-6">
          Global Networking
@@ -583,7 +583,7 @@ const InfrastructureView = ({ onBack }: { onBack: () => void }) => {
       initial={{ opacity: 0, x: 100 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -100 }}
-      className="min-h-screen bg-golf-dark"
+      className="min-h-screen"
     >
       {/* Main Core Section */}
       <section className="relative pt-32 pb-24 px-6 overflow-hidden">
@@ -695,35 +695,74 @@ const InfrastructureView = ({ onBack }: { onBack: () => void }) => {
           </div>
         </div>
       </section>
-      <section className="py-32 px-6 bg-black/40 border-t border-white/5 relative overflow-hidden">
-        <HUDOverlay />
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold mb-6 italic">"Stockfish <span className="text-white/40">for Golf"</span></h2>
-            <p className="text-white/50 max-w-2xl mx-auto font-light text-lg">
-              Hardware simply collects data. Our AI Normalization Engine gives it meaning, replacing flawed, static handicap systems.
-            </p>
-          </div>
-
-          <div className="max-w-4xl mx-auto glass-dark p-12 rounded-[3rem] border border-white/10 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-8">
-              <Brain size={48} className="text-golf-accent/20" />
-            </div>
-            <h3 className="text-2xl font-bold mb-4">AI Normalization Engine</h3>
-            <p className="text-white/50 leading-relaxed font-light mb-8 text-lg">
-              It simulates optimal play using real-time 3D topography, wind, and moisture, evaluating shots through reinforcement learning–based agent gameplay rather than raw physical outcomes. It builds a shot quality map of the course, showing the best plays from any position, forming the foundation for an AI caddie.
-            </p>
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-4">
-              <Globe className="text-golf-accent shrink-0 mt-1" size={20} />
-              <p className="text-sm text-white/80 font-medium leading-relaxed">
-                <span className="text-golf-accent font-bold">The E-sports Enabler:</span> A player fighting a storm in Poland can now be fairly and mathematically ranked against a player in sunny Spain. This is the foundation of our global B2C leagues.
+      <section className="py-32 px-6 border-t border-white/5 relative overflow-hidden">
+        <div className="absolute inset-0 bg-golf-accent/5 -z-10" />
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-accent/30 bg-golf-accent/5 text-golf-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-8">
+                Proprietary AI Architecture
+              </div>
+              <h2 className="text-5xl md:text-7xl font-bold mb-8 italic leading-tight">
+                "Stockfish<br />
+                <span className="text-golf-accent">for Golf"</span>
+              </h2>
+              <p className="text-white/70 font-light text-xl leading-relaxed mb-10">
+                Hardware simply collects data. Our AI Normalization Engine gives it meaning, replacing flawed, static handicap systems with real-time neural processing.
               </p>
+              
+              <div className="space-y-8">
+                <div className="flex gap-6">
+                  <div className="w-12 h-12 rounded-xl bg-golf-accent/10 flex items-center justify-center shrink-0 border border-golf-accent/20">
+                    <Grid size={24} className="text-golf-accent" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold mb-2">3D Topography Mapping</h4>
+                    <p className="text-white/40 font-light leading-relaxed">
+                      Simulates optimal play using moisture, wind, and elevation, evaluating shots through reinforcement learning-based agents.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-6">
+                  <div className="w-12 h-12 rounded-xl bg-golf-accent/10 flex items-center justify-center shrink-0 border border-golf-accent/20">
+                    <Trophy size={24} className="text-golf-accent" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold mb-2">Global Fairness Standard</h4>
+                    <p className="text-white/40 font-light leading-relaxed">
+                      Mathematically ranks a player in a Polish storm against one in sunny Spain. The foundation of our global B2C leagues.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative">
+              <div className="absolute -inset-4 bg-golf-accent/20 blur-[100px] -z-10 animate-pulse" />
+              <div className="glass-dark aspect-square rounded-[3rem] border border-white/10 flex items-center justify-center overflow-hidden relative">
+                <div className="absolute inset-0 opacity-20">
+                  <div className="w-full h-full" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(163, 230, 53, 0.2) 1px, transparent 0)', backgroundSize: '32px 32px' }} />
+                </div>
+                <div className="relative text-center p-12">
+                  <div className="mb-6 inline-block p-4 rounded-full bg-golf-accent/10 border border-golf-accent/20">
+                    <Globe className="text-golf-accent animate-spin-slow" size={48} />
+                  </div>
+                  <h3 className="text-3xl font-bold mb-4 italic text-white">The Enabler.</h3>
+                  <div className="h-px w-24 bg-golf-accent/50 mx-auto mb-6" />
+                  <p className="text-white/60 font-mono text-sm leading-relaxed">
+                    [ SYSTEM_STATUS: OPERATIONAL ]<br />
+                    [ ENGINE_TYPE: DYNAMIC_NORMALIZATION ]<br />
+                    [ COMPUTE_LOAD: OPTIMAL ]
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
       {/* Secondary Logistics Section */}
-      <section className="py-32 px-6 bg-gradient-to-b from-black/40 to-golf-dark border-t border-white/5 relative overflow-hidden">
+      <section className="py-32 px-6 border-t border-white/5 relative overflow-hidden">
         <HUDOverlay />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-golf-accent/5 blur-[150px] -z-10" />
         
@@ -921,7 +960,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      <footer className="py-24 px-6 border-t border-white/5 text-center relative overflow-hidden bg-golf-dark">
+      <footer className={`py-24 px-6 border-t border-white/5 text-center relative overflow-hidden ${currentView === 'infrastructure' ? 'bg-black/30' : 'bg-golf-dark'}`}>
         <div className="flex justify-center items-center gap-3 mb-10">
           <div className="w-8 h-8 bg-golf-accent/20 rounded-full flex items-center justify-center">
             <div className="w-2 h-2 bg-golf-accent rounded-full shadow-[0_0_10px_theme('colors.golf.accent')]" />
