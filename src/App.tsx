@@ -903,7 +903,7 @@ export default function App() {
                       <p className="text-xs text-white/20 mb-6 italic leading-relaxed max-w-sm mx-auto">RL Algorithms for CAPEX optimization & UWB Mesh. Currently in-house technology consultant @ Otto Alte-Teigeler GMBH.</p>
                       <div className="flex flex-col items-center gap-1">
                         <p className="text-xs text-golf-accent/70 font-mono">hugopdmat@gmail.com</p>
-                        <p className="text-xs text-white/40 font-mono">+48 123 456 789</p>
+                        <p className="text-xs text-white/40 font-mono">+48 667 551 555</p>
                       </div>
                     </div>
                     <div className="relative group text-center">
@@ -917,7 +917,7 @@ export default function App() {
                       <p className="text-xs text-white/20 mb-6 italic leading-relaxed max-w-sm mx-auto">Business Analytics & Flutter Developer. Currently Data Analyst @ Oriflame (Supply chain & Finance).</p>
                       <div className="flex flex-col items-center gap-1">
                         <p className="text-xs text-golf-accent/70 font-mono">julek.grzybowski@gmail.com</p>
-                        <p className="text-xs text-white/40 font-mono">+48 123 456 789</p>
+                        <p className="text-xs text-white/40 font-mono">+48 663 310 888</p>
                       </div>
                     </div>
                   </div>
