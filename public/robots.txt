@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Host
+Host: https://fairwayos.tech
+
+# Sitemap
+Sitemap: https://fairwayos.tech/sitemap.xml

@@ -1,9 +1,10 @@
 import { motion, AnimatePresence } from "motion/react";
+import { Analytics } from "@vercel/analytics/react";
 import { Cpu, Globe, Trophy, Smartphone, MapPin, Zap, ChevronRight, BarChart3, Bluetooth,
 Database, ShieldCheck, Activity, Target, Layers, Linkedin, ArrowUpRight, Timer, WifiOff,
 TrendingUp, Clock, Users, Network, Brain, Grid, CheckCircle, Crosshair, Loader2, Gamepad2,
 MapIcon, QrCode, Radio, LogIn, ArrowLeft, Lock, Plus, Check, Search, LocateFixed, Wifi, 
-AlertTriangle, Info, X, Flag, UserPlus, History } from "lucide-react";
+AlertTriangle, Info, X, Flag, UserPlus, History, Mail } from "lucide-react";
 import { ResponsiveContainer, AreaChart, Area } from "recharts";
 import { useState, useEffect, useRef } from "react";
 import React from "react";
@@ -81,20 +82,29 @@ const HUDOverlay = () => (
   </div>
 );
 
-const YouTubeVideoSection = ({ title, subtitle, videoId, scrollText }: { title?: string, subtitle?: string, videoId: string, scrollText?: string }) => (
-  // Zmiana paddingu z pt-40/pb-32 na pt-24/pb-16
-  <section className="pt-20 pb-12 md:pt-24 md:pb-16 px-4 md:px-6 relative overflow-hidden border-t border-white/5 min-h-[100dvh] flex flex-col justify-center items-center bg-black/20 w-full">
+const YouTubeVideoSection = ({ 
+  title, 
+  subtitle, 
+  videoId,
+  className = "bg-black/20"
+}: { 
+  title?: React.ReactNode, 
+  subtitle?: string, 
+  videoId: string,
+  className?: string
+}) => (
+  <section className={`py-12 md:py-16 px-4 md:px-6 relative overflow-hidden border-t border-white/5 flex flex-col justify-center items-center w-full ${className}`}>
     <div className="absolute top-0 right-0 w-1/2 h-full bg-golf-accent/5 blur-[150px] -z-10" />
     
-    <div className="max-w-5xl mx-auto w-full text-center z-10 flex flex-col items-center justify-center h-full">
+    <div className="max-w-5xl mx-auto w-full text-center z-10 flex flex-col items-center justify-center">
       {subtitle && (
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-accent/30 bg-golf-accent/5 text-golf-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-4 md:mb-6 shadow-[0_0_15px_rgba(163,230,53,0.1)]">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-accent/30 bg-golf-accent/5 text-golf-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-3 md:mb-4 shadow-[0_0_15px_rgba(163,230,53,0.1)]">
           <Play size={12} /> {subtitle}
         </div>
       )}
-      {title && <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-10 italic">{title}</h2>}
+      {title && <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-5 md:mb-8 italic">{title}</h2>}
       
-      <div className="relative w-full max-h-[55vh] aspect-video rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl glass p-2 md:p-4">
+      <div className="relative w-full max-w-4xl aspect-video rounded-2xl md:rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl glass p-2 md:p-3">
         <div className="w-full h-full rounded-xl overflow-hidden relative bg-black/50">
           <iframe 
             className="absolute top-0 left-0 w-full h-full"
@@ -106,27 +116,6 @@ const YouTubeVideoSection = ({ title, subtitle, videoId, scrollText }: { title?:
           ></iframe>
         </div>
       </div>
-
-      {scrollText && (
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="flex flex-col items-center gap-2 md:gap-3 mt-6 md:mt-10 z-20 cursor-pointer group"
-          onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
-        >
-          <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-white/50 group-hover:text-golf-accent transition-colors">
-            {scrollText}
-          </span>
-          <div className="w-[2px] h-6 md:h-10 bg-white/10 rounded-full relative overflow-hidden">
-            <motion.div 
-              animate={{ y: ["0%", "200%", "0%"], opacity: [0, 1, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-0 left-0 w-full h-1/3 bg-golf-accent rounded-full"
-            />
-          </div>
-        </motion.div>
-      )}
     </div>
   </section>
 );
@@ -138,36 +127,58 @@ const Navbar = ({ onNavClick, showLinks, viewMode, onViewModeChange, onPlayClick
   onPlayClick: () => void,
   isGameView: boolean
 }) => (
-  <nav className="fixed top-0 left-0 right-0 z-50 flex flex-col px-6 py-4 backdrop-blur-lg border-b border-white/5 bg-black/20 gap-4 transition-all">
-    <div className="flex flex-wrap justify-between items-center max-w-7xl mx-auto w-full relative gap-y-4">
+  <nav className="fixed top-0 left-0 right-0 z-50 flex flex-col px-4 sm:px-6 py-3.5 sm:py-4 backdrop-blur-lg border-b border-white/5 bg-black/20 gap-3 sm:gap-4 transition-all">
+    <div className="flex flex-wrap justify-between items-center max-w-7xl mx-auto w-full relative gap-y-3 sm:gap-y-4">
       
-      {/* Sekcja LOGO + JOIN THE GAME (Lewa strona) */}
-      <div className="flex items-center gap-3 md:gap-6 z-10">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={(e) => onNavClick(e as any, 'hero')}>
-          <div className="w-6 h-6 md:w-8 md:h-8 bg-golf-accent rounded-full flex items-center justify-center shrink-0">
-            <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-golf-dark rounded-full shadow-[0_0_8px_white]" />
+      {/* Sekcja LOGO + JOIN THE GAME (Lewa strona na desktopie) */}
+      <div className="flex items-center gap-2 sm:gap-3 md:gap-6 z-10">
+        <div className="flex items-center gap-1.5 sm:gap-2 cursor-pointer" onClick={(e) => onNavClick(e as any, 'hero')}>
+          <div className="relative">
+            <div className="w-6 h-6 md:w-8 md:h-8 bg-golf-accent rounded-full flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(163,230,53,0.5)]">
+              <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-golf-dark rounded-full shadow-inner" />
+            </div>
+            <div className="absolute inset-0 bg-golf-accent blur-md opacity-30 -z-10" />
           </div>
-          <span className="font-display font-bold text-lg md:text-xl tracking-tighter text-white">Fairway<span className="text-golf-accent">OS</span></span>
+          <span className="font-display font-bold text-base sm:text-lg md:text-xl tracking-tighter text-white">Fairway<span className="text-golf-accent">OS</span></span>
         </div>
         
+        {/* Disc Range na desktopie obok logo */}
         {!isGameView && (
-          <button 
-            onClick={onPlayClick}
-            className="flex items-center gap-1.5 md:gap-2 text-cyan-400 bg-cyan-400/10 border border-cyan-400/30 px-3 py-1.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest hover:bg-cyan-400 hover:text-black transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)]"
+          <a 
+            href="/disc-range"
+            onClick={(e) => {
+              e.preventDefault();
+              onPlayClick();
+            }}
+            className="hidden md:flex items-center gap-2 text-cyan-400 bg-cyan-400/10 border border-cyan-400/30 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-cyan-400 hover:text-black transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)] shrink-0"
           >
-            <Gamepad2 size={14} /> <span className="hidden lg:inline">Join the Game</span><span className="lg:hidden">Join</span>
-          </button>
+            <Gamepad2 size={14} className="shrink-0" /> 
+            <span>Disc Range</span>
+          </a>
         )}
       </div>
       
-      {/* Przycisk kontaktu (Prawa strona) */}
-      <div className="flex items-center z-10">
+      {/* Prawa strona: Disc na mobile + Contact */}
+      <div className="flex items-center gap-2 sm:gap-3 z-10 shrink-0">
+        {!isGameView && (
+          <a 
+            href="/disc-range"
+            onClick={(e) => {
+              e.preventDefault();
+              onPlayClick();
+            }}
+            className="md:hidden flex items-center gap-1.5 text-cyan-400 bg-cyan-400/10 border border-cyan-400/30 px-2.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-cyan-400 hover:text-black transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)] shrink-0"
+          >
+            <Gamepad2 size={13} className="shrink-0" /> 
+            <span>Disc</span>
+          </a>
+        )}
         <a 
           href="#leadership" 
           onClick={(e) => {
             if(!isGameView) onNavClick(e, 'leadership');
           }}
-          className="bg-white text-golf-dark px-4 py-1.5 md:px-5 md:py-2 rounded-full font-bold text-[10px] md:text-xs uppercase tracking-widest hover:bg-golf-accent transition-all hover:scale-105 active:scale-95 shadow-lg shadow-white/10 text-center"
+          className="bg-white text-golf-dark px-3.5 sm:px-4 py-1.5 md:px-5 md:py-2 rounded-full font-bold text-[10px] md:text-xs uppercase tracking-widest hover:bg-golf-accent transition-all hover:scale-105 active:scale-95 shadow-lg shadow-white/10 text-center"
         >
           Contact
         </a>
@@ -233,15 +244,27 @@ const Hero = () => {
         transition={{ duration: 0.8 }}
         className="text-center z-20 max-w-4xl"
       >
-
+        <div className="flex justify-center mb-8 md:mb-10">
+          <div className="flex items-center gap-4 md:gap-5 group">
+            <div className="relative">
+              <div className="w-14 h-14 md:w-18 md:h-18 bg-golf-accent rounded-full flex items-center justify-center shadow-[0_0_35px_rgba(163,230,53,0.4)] group-hover:scale-105 transition-transform duration-500">
+                <div className="w-4 h-4 md:w-5 md:h-5 bg-golf-dark rounded-full shadow-inner" />
+              </div>
+              <div className="absolute inset-0 bg-golf-accent blur-2xl opacity-30 -z-10" />
+            </div>
+            <span className="font-display font-black text-4xl sm:text-5xl md:text-7xl tracking-tighter uppercase italic drop-shadow-[0_0_25px_rgba(163,230,53,0.25)] select-none">
+              FAIRWAY<span className="text-golf-accent">OS</span>
+            </span>
+          </div>
+        </div>
 
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-accent/30 bg-golf-accent/5 text-golf-accent text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] mb-4 md:mb-6 shadow-[0_0_15px_rgba(163,230,53,0.2)]">
           <Zap size={12} /> Deep Tech from Poland | Scaling to USA
         </div>
         <h1 className="text-4xl sm:text-6xl md:text-8xl font-extrabold mb-3 md:mb-4 leading-none selection:bg-white selection:text-black">
           <span className="sr-only">FairwayOS: Smart Golf Balls and Autonomous UWB Telemetry. </span>
-          The Future <br />
-          <span className="text-gradient drop-shadow-[0_0_40px_rgba(163,230,53,0.4)]">Of Golf</span>
+          Smarter Courses <br />
+          <span className="text-gradient drop-shadow-[0_0_40px_rgba(163,230,53,0.4)]">Faster Rounds</span>
         </h1>
         <p className="text-sm sm:text-lg md:text-xl text-white/80 font-light mb-4 md:mb-6 max-w-xs sm:max-w-2xl mx-auto leading-relaxed drop-shadow-md">
           Autonomous Telemetry & Global E-sports Platform. <br className="hidden md:block" />
@@ -299,17 +322,17 @@ const FeatureCard = ({ icon: Icon, title, desc, delay = 0, onAction, actionText 
 );
 
 const OwnerBenefitsSection = () => (
-  <section id="facility-owners" className="pt-32 pb-24 md:pt-40 md:pb-32 px-4 md:px-6 relative overflow-hidden bg-golf-dark border-t border-white/5 min-h-[100dvh] flex flex-col justify-center">
+  <section id="facility-owners" className="py-16 md:py-20 px-4 md:px-6 relative overflow-hidden bg-golf-dark border-t border-white/5 flex flex-col justify-center">
     <div className="max-w-7xl mx-auto relative z-10">
-      <div className="text-center mb-10 md:mb-16">
-        <h3 className="text-xl font-bold mb-6 uppercase tracking-[0.3em] text-golf-accent font-display">Strategic Partnership</h3>
-        <h2 className="text-5xl md:text-7xl font-bold mb-8 italic">Maximize ROI. <br /><span className="text-white/40">Elevate Prestige.</span></h2>
-        <p className="text-lg text-white/50 max-w-2xl mx-auto font-light">
+      <div className="text-center mb-10 md:mb-14">
+        <h3 className="text-xl font-bold mb-4 uppercase tracking-[0.3em] text-golf-accent font-display">Strategic Partnership</h3>
+        <h2 className="text-4xl md:text-6xl font-bold mb-6 italic">Maximize ROI. <br /><span className="text-white/40">Elevate Prestige.</span></h2>
+        <p className="text-base md:text-lg text-white/50 max-w-2xl mx-auto font-light">
           FairwayOS transforms traditional golf courses into high-utilization tech hubs, maximizing throughput while offering unprecedented player analytics.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
         {[
           {
             icon: <MapPin className="text-golf-accent" size={24} />,
@@ -353,19 +376,19 @@ const OwnerBenefitsSection = () => (
 );
 
 const TechShowcase = ({ onLearnMore }: { onLearnMore: () => void }) => (
-  <section id="tech" className="pt-32 pb-24 md:pt-40 md:pb-32 px-4 md:px-6 relative overflow-hidden bg-black/20 border-t border-white/5 min-h-[100dvh] flex flex-col justify-center">
+  <section id="tech" className="py-16 md:py-20 px-4 md:px-6 relative overflow-hidden bg-black/20 border-t border-white/5 flex flex-col justify-center">
     <div className="absolute inset-0 bg-golf-accent/5 -z-10" />
     <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
       style={{ backgroundImage: 'radial-gradient(circle, #a3e635 1px, transparent 1px)', backgroundSize: '60px 60px' }} 
     />
     <div className="max-w-7xl mx-auto">
-      <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         <div>
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-8">
+          <h2 className="text-3xl md:text-5xl font-extrabold mb-6">
             Digital Heart. <br />
             <span className="text-golf-accent text-gradient">Classic Form.</span>
           </h2>
-          <p className="text-lg text-white/50 mb-10 font-light leading-relaxed font-display">
+          <p className="text-base md:text-lg text-white/50 mb-8 font-light leading-relaxed font-display">
             Our Smart Ball technology preserves the weight, flight, and feel of tour-grade balls while embedding high-precision sensors.
           </p>
           
@@ -441,24 +464,16 @@ const TechShowcase = ({ onLearnMore }: { onLearnMore: () => void }) => (
             <div className="absolute inset-0 bg-golf-accent/20 blur-[120px] rounded-full scale-75" />
             
             <div className="relative h-full w-full glass rounded-full flex items-center justify-center overflow-hidden border border-white/20 p-8">
-              <div className="w-full h-full bg-white rounded-full shadow-[0_0_100px_rgba(255,255,255,0.4)] flex items-center justify-center relative inner-glow overflow-hidden">
+              <div className="w-full h-full bg-golf-dark rounded-full shadow-[0_0_100px_rgba(255,255,255,0.1)] flex items-center justify-center relative overflow-hidden">
                 <img 
-                  src="/telefon.png" 
+                  src="/telefon.jpg" 
                   alt="FairwayOS: mobile app showing real-time 3D golf ball flight trajectory" 
-                  className="w-full h-full object-cover mix-blend-multiply"
+                  className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 border-8 border-dashed border-golf-accent/30 rounded-full animate-[spin_20s_linear_infinite] pointer-events-none" />
-                <div className="absolute inset-10 border border-golf-dark/5 rounded-full" />
-                
-                <div className="absolute inset-12 opacity-80 pointer-events-none">
-                  <Cpu className="text-golf-dark w-full h-full p-20 opacity-5" />
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-golf-accent rounded-full shadow-[0_0_20px_#a3e635]" />
-                </div>
-
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none" />
               </div>
-              
             </div>
           </motion.div>
 
@@ -473,11 +488,11 @@ const TechShowcase = ({ onLearnMore }: { onLearnMore: () => void }) => (
         </div>
       </div>
 
-      <div className="mt-20 flex justify-center">
+      <div className="mt-12 md:mt-16 flex justify-center">
         <button 
           id="learn-more-trigger"
           onClick={onLearnMore}
-          className="inline-flex items-center gap-4 bg-white/5 hover:bg-golf-accent hover:text-golf-dark text-white px-10 py-5 rounded-2xl font-bold uppercase tracking-widest text-xs transition-all border border-white/10 hover:border-golf-accent hover:scale-105 active:scale-95 group shadow-2xl"
+          className="inline-flex items-center gap-4 bg-white/5 hover:bg-golf-accent hover:text-golf-dark text-white px-10 py-4 md:py-5 rounded-2xl font-bold uppercase tracking-widest text-xs transition-all border border-white/10 hover:border-golf-accent hover:scale-105 active:scale-95 group shadow-2xl"
         >
           Learn more
           <div className="w-8 h-8 rounded-full bg-white/10 group-hover:bg-golf-dark/10 flex items-center justify-center transition-colors">
@@ -490,29 +505,29 @@ const TechShowcase = ({ onLearnMore }: { onLearnMore: () => void }) => (
 );
 
 const AITechSection = () => (
-  <section id="ai-tech" className="pt-24 pb-12 px-4 md:px-6 relative overflow-hidden bg-black/50 border-t border-white/5 min-h-[100dvh] flex flex-col justify-center">
+  <section id="ai-tech" className="py-16 md:py-20 px-4 md:px-6 relative overflow-hidden bg-black/50 border-t border-white/5 flex flex-col justify-center">
     <div className="absolute top-0 left-0 w-1/2 h-full bg-golf-accent/5 blur-[150px] -z-10" />
     <div className="max-w-7xl mx-auto">
-      <div className="text-center mb-10 md:mb-12">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-accent/30 bg-golf-accent/5 text-golf-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-6">
+      <div className="text-center mb-8 md:mb-12">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-accent/30 bg-golf-accent/5 text-golf-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-4 md:mb-6">
           Proprietary Algorithms
         </div>
-        <h2 className="text-4xl md:text-6xl font-bold mb-6 italic">The Brain: <span className="text-white/40">AI & RL</span></h2>
-        <p className="text-white/50 max-w-2xl mx-auto font-light text-lg">
+        <h2 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 italic">The Brain: <span className="text-white/40">AI & RL</span></h2>
+        <p className="text-white/50 max-w-2xl mx-auto font-light text-base md:text-lg">
           Deep tech isn't just hardware. Our proprietary Reinforcement Learning (RL) models are the core of our business viability and competitive integrity.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-12">
+      <div className="grid md:grid-cols-2 gap-8 md:gap-12">
         {/* RL for CAPEX */}
-        <div className="glass p-10 rounded-[3rem] border border-white/10 relative overflow-hidden group">
+        <div className="glass p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] border border-white/10 relative overflow-hidden group">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(163,230,53,0.05),transparent_50%)]" />
-          <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-golf-accent mb-8">
-            <Network size={28} />
+          <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-white/5 flex items-center justify-center text-golf-accent mb-6 md:mb-8">
+            <Network size={26} />
           </div>
-          <h3 className="text-2xl font-bold mb-4">RL for CAPEX Optimization</h3>
-          <h4 className="text-xs font-mono text-golf-accent mb-6 uppercase tracking-widest">Business Viability Engine</h4>
-          <p className="text-white/50 leading-relaxed font-light mb-6">
+          <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">RL for CAPEX Optimization</h3>
+          <h4 className="text-xs font-mono text-golf-accent mb-4 md:mb-6 uppercase tracking-widest">Business Viability Engine</h4>
+          <p className="text-white/50 leading-relaxed font-light mb-6 text-sm md:text-base">
             Deploying a dense sensor network on a 100-hectare golf course is expensive. We trained an RL algorithm to simulate millions of RF wave propagation scenarios across difficult terrain (trees, hills).
           </p>
           <div className="p-4 rounded-2xl bg-golf-accent/5 border border-golf-accent/20">
@@ -523,14 +538,14 @@ const AITechSection = () => (
         </div>
 
         {/* AI Normalization */}
-        <div className="glass-dark p-10 rounded-[3rem] border border-white/10 relative overflow-hidden group">
+        <div className="glass-dark p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] border border-white/10 relative overflow-hidden group">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(255,255,255,0.05),transparent_50%)]" />
-          <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-white mb-8">
-            <Brain size={28} />
+          <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-white/5 flex items-center justify-center text-white mb-6 md:mb-8">
+            <Brain size={26} />
           </div>
-          <h3 className="text-2xl font-bold mb-4">"Stockfish for Golf"</h3>
-          <h4 className="text-xs font-mono text-white/40 mb-6 uppercase tracking-widest">AI Normalization Engine</h4>
-          <p className="text-white/50 leading-relaxed font-light mb-6">
+          <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">"Stockfish for Golf"</h3>
+          <h4 className="text-xs font-mono text-white/40 mb-4 md:mb-6 uppercase tracking-widest">AI Normalization Engine</h4>
+          <p className="text-white/50 leading-relaxed font-light mb-6 text-sm md:text-base">
             Current handicap systems are static and flawed. Our RL Agent acts like a chess engine, evaluating the <i>quality</i> of a decision rather than just the raw outcome.
           </p>
           <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
@@ -546,14 +561,14 @@ const AITechSection = () => (
 
 
 const BusinessSection = () => (
-<section id="business" className="pt-24 pb-12 px-4 md:px-6 overflow-hidden bg-golf-dark relative min-h-[100dvh] flex flex-col justify-center">
+<section id="business" className="py-16 md:py-20 px-4 md:px-6 overflow-hidden bg-golf-dark relative flex flex-col justify-center">
     <div className="max-w-7xl mx-auto glass p-6 md:p-12 lg:p-16 rounded-[2.5rem] md:rounded-[4rem] relative overflow-hidden border border-white/5">
       <div className="absolute top-0 right-0 w-96 h-96 bg-golf-accent/5 blur-[120px] -z-10" />
       <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
         <div>
           <div className="text-golf-accent font-mono text-sm tracking-[0.4em] mb-4 uppercase">Business Model & Scalability</div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 italic">B2B2C <span className="text-white">Revenue Synergy.</span></h2>
-          <p className="text-white/50 mb-10 font-light text-lg leading-relaxed">
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 md:mb-8 italic">B2B2C <span className="text-white">Revenue Synergy.</span></h2>
+          <p className="text-white/50 mb-8 md:mb-10 font-light text-base md:text-lg leading-relaxed">
             A diversified, highly recurring revenue model. We empower courses with infrastructure, monetizing both the facility (SaaS) and the global player base (Marketplace).
           </p>
           <div className="space-y-6">
@@ -587,10 +602,10 @@ const BusinessSection = () => (
           </div>
         </div>
         
-        <div className="glass-dark p-10 rounded-[3rem] border border-white/10 shadow-2xl relative overflow-hidden">
+        <div className="glass-dark p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] border border-white/10 shadow-2xl relative overflow-hidden">
            <div className="absolute top-0 right-0 w-32 h-32 bg-golf-accent/5 blur-3xl" />
-           <h3 className="text-2xl font-bold mb-8 italic">Financial Projections (Y5)</h3>
-           <div className="space-y-8">
+           <h3 className="text-xl md:text-2xl font-bold mb-6 md:mb-8 italic">Financial Projections (Y5)</h3>
+           <div className="space-y-6 md:space-y-8">
               <div>
                  <div className="flex justify-between text-xs font-bold uppercase tracking-widest mb-3 text-white/40">
                     <span>SOM Target (USA Premium)</span>
@@ -629,15 +644,15 @@ const BusinessSection = () => (
 );
 
 const LeaguesSection = () => (
-  <section id="leagues" className="pt-24 pb-12 px-4 md:px-6 relative overflow-hidden bg-black/30 border-t border-white/5 min-h-[100dvh] flex flex-col justify-center">
+  <section id="leagues" className="py-16 md:py-20 px-4 md:px-6 relative overflow-hidden bg-black/30 border-t border-white/5 flex flex-col justify-center">
     <HUDOverlay />
     <div className="absolute top-0 right-0 w-1/2 h-full bg-golf-accent/5 blur-[150px] -z-10" />
-    <div className="max-w-7xl mx-auto text-center mb-10 md:mb-16 relative z-10">
-       <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-neon/30 bg-golf-neon/5 text-golf-neon text-[10px] font-bold uppercase tracking-[0.2em] mb-6">
+    <div className="max-w-7xl mx-auto text-center mb-10 md:mb-14 relative z-10">
+       <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-neon/30 bg-golf-neon/5 text-golf-neon text-[10px] font-bold uppercase tracking-[0.2em] mb-4 md:mb-6">
          Global Networking
        </div>
-       <h2 className="text-4xl md:text-7xl font-bold mb-6 italic">E-sports On <span className="text-golf-accent">Real Grass</span></h2>
-       <p className="text-white/50 max-w-2xl mx-auto text-lg font-light leading-relaxed">
+       <h2 className="text-3xl md:text-6xl font-bold mb-4 md:mb-6 italic">E-sports On <span className="text-golf-accent">Real Grass</span></h2>
+       <p className="text-white/50 max-w-2xl mx-auto text-base md:text-lg font-light leading-relaxed">
          The distinction between physical and digital is gone. Play anytime, compete globally. 
          FairwayOS Leagues normalize course conditions for true competitive integrity.
        </p>
@@ -701,7 +716,7 @@ const InfrastructureView = ({ onBack }: { onBack: () => void }) => {
       className="min-h-screen"
     >
       {/* Main Core Section */}
-      <section className="relative pt-32 pb-20 md:pb-24 px-6 overflow-hidden min-h-[100dvh] flex flex-col justify-center">
+      <section className="relative pt-24 pb-16 md:pt-28 md:pb-20 px-6 overflow-hidden flex flex-col justify-center">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0 flex items-center justify-center text-center">
           <img 
@@ -717,20 +732,20 @@ const InfrastructureView = ({ onBack }: { onBack: () => void }) => {
         <HUDOverlay />
         <div className="scanline" />
 
-        <div className="max-w-7xl mx-auto relative z-10 pl-8 pr-4 pt-10 md:pl-16 md:pt-4">
-          <button onClick={onBack} className="flex items-center gap-2 text-golf-accent font-bold uppercase text-xs tracking-widest mb-12 hover:translate-x-[-4px] transition-transform">
+        <div className="max-w-7xl mx-auto relative z-10 pl-4 pr-4 pt-6 md:pl-16 md:pt-4">
+          <button onClick={onBack} className="flex items-center gap-2 text-golf-accent font-bold uppercase text-xs tracking-widest mb-8 md:mb-10 hover:translate-x-[-4px] transition-transform">
             <ChevronRight size={16} className="rotate-180" /> Back to Overview
           </button>
 
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div>
               <div className="text-xl font-mono text-golf-accent mb-4 tracking-widest uppercase">Ecosystem Core</div>
-              <h2 className="text-5xl md:text-7xl font-bold mb-8">Marker Posts & <br /><span className="text-gradient">UWB Mesh</span></h2>
-              <p className="text-xl text-white/50 leading-relaxed font-light mb-10">
+              <h2 className="text-4xl md:text-6xl font-bold mb-6">Marker Posts & <br /><span className="text-gradient">UWB Mesh</span></h2>
+              <p className="text-base md:text-lg text-white/50 leading-relaxed font-light mb-8">
                 Our solar-powered marker posts create an autonomous tracking layer across the entire golf course. Using Ultra-Wideband (UWB) mesh technology, we achieve centimeter-level accuracy without requiring active staff management.
               </p>
-              <div className="grid gap-6">
-                <div className="glass p-6 rounded-2xl flex items-center gap-6">
+              <div className="grid gap-4 md:gap-6">
+                <div className="glass p-5 md:p-6 rounded-2xl flex items-center gap-5 md:gap-6">
                   <div className="w-12 h-12 rounded-xl bg-golf-accent/10 flex items-center justify-center text-golf-accent shrink-0">
                     <Cpu size={24} />
                   </div>
@@ -739,7 +754,7 @@ const InfrastructureView = ({ onBack }: { onBack: () => void }) => {
                     <p className="text-xs text-white/40">Our Reinforcement learning algorithms optimize anchor placement, drastically reducing hardware costs compared to standard geometric grids.</p>
                   </div>
                 </div>
-                <div className="glass p-6 rounded-2xl flex items-center gap-6">
+                <div className="glass p-5 md:p-6 rounded-2xl flex items-center gap-5 md:gap-6">
                   <div className="w-12 h-12 rounded-xl bg-golf-accent/10 flex items-center justify-center text-golf-accent">
                     <Database size={24} />
                   </div>
@@ -750,7 +765,7 @@ const InfrastructureView = ({ onBack }: { onBack: () => void }) => {
                 </div>
               </div>
             </div>
-            <div className="relative aspect-[4/5] glass rounded-[4rem] flex items-center justify-center border border-white/10 overflow-hidden shadow-2xl bg-black/40 group">
+            <div className="relative aspect-[4/5] glass rounded-[3rem] md:rounded-[4rem] flex items-center justify-center border border-white/10 overflow-hidden shadow-2xl bg-black/40 group">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(163,230,53,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               <img 
                 src="/budowa.png" 
@@ -758,8 +773,8 @@ const InfrastructureView = ({ onBack }: { onBack: () => void }) => {
                 className="w-full h-full object-contain p-4 pb-24 group-hover:scale-105 transition-transform duration-700 -translate-y-4"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-x-0 bottom-0 p-10 bg-gradient-to-t from-golf-dark via-golf-dark/80 to-transparent pointer-events-none">
-                 <div className="text-3xl font-mono text-golf-accent font-bold mb-1 tracking-tighter">SOLAR_MESH:01</div>
+              <div className="absolute inset-x-0 bottom-0 p-8 md:p-10 bg-gradient-to-t from-golf-dark via-golf-dark/80 to-transparent pointer-events-none">
+                 <div className="text-2xl md:text-3xl font-mono text-golf-accent font-bold mb-1 tracking-tighter">SOLAR_MESH:01</div>
                  <div className="text-[10px] font-mono text-white/40 uppercase tracking-[0.4em]">Autonomous Tracking Marker Post</div>
               </div>
             </div>
@@ -768,41 +783,41 @@ const InfrastructureView = ({ onBack }: { onBack: () => void }) => {
       </section>
 
       {/* Smart Ball Section */}
-      <section className="py-20 md:py-32 px-6 border-t border-white/5 relative overflow-hidden min-h-[100dvh] flex flex-col justify-center">
+      <section className="py-16 md:py-20 px-6 border-t border-white/5 relative overflow-hidden flex flex-col justify-center">
         <div className="absolute top-0 right-0 w-64 h-64 bg-golf-accent/5 blur-[100px] -z-10" />
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="order-2 lg:order-1 relative aspect-square lg:h-[600px] w-full glass rounded-[4rem] border border-white/10 overflow-hidden group bg-black/20 flex items-center justify-center">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div className="order-2 lg:order-1 relative aspect-square lg:h-[520px] w-full glass rounded-[3rem] md:rounded-[4rem] border border-white/10 overflow-hidden group bg-black/20 flex items-center justify-center">
                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(163,230,53,0.1),transparent_70%)] animate-pulse" />
                <img 
                  src="/ball.png" 
                  alt="Smart Ball Technology" 
-                 className="w-full h-full object-contain p-12 transition-transform duration-700 group-hover:scale-110 drop-shadow-[0_0_35px_rgba(163,230,53,0.2)]"
+                 className="w-full h-full object-contain p-10 md:p-12 transition-transform duration-700 group-hover:scale-110 drop-shadow-[0_0_35px_rgba(163,230,53,0.2)]"
                  referrerPolicy="no-referrer"
                />
-               <div className="absolute inset-0 border-[20px] border-white/[0.02] rounded-[4rem] pointer-events-none" />
+               <div className="absolute inset-0 border-[20px] border-white/[0.02] rounded-[3rem] md:rounded-[4rem] pointer-events-none" />
             </div>
             
             <div className="order-1 lg:order-2">
               <div className="text-xl font-mono text-golf-accent mb-4 tracking-widest uppercase">The Hardware</div>
-              <h2 className="text-5xl md:text-6xl font-bold mb-8 italic">Smart <span className="text-golf-accent">Ball.</span></h2>
-              <p className="text-xl text-white/50 leading-relaxed font-light mb-10">
+              <h2 className="text-4xl md:text-6xl font-bold mb-6 italic">Smart <span className="text-golf-accent">Ball.</span></h2>
+              <p className="text-base md:text-lg text-white/50 leading-relaxed font-light mb-8">
                 A professional golf ball re-engineered for the digital age. By transmitting UWB signals at 100 Hz to the marker posts, it enables precise real-time 3D trajectory tracking across the entire course.
               </p>
               
-              <div className="flex flex-wrap gap-4 mb-10">
+              <div className="flex flex-wrap gap-3 mb-8">
                  {['Tour-Grade Polyurethane', '3-Piece Core', 'Micro-Telemetry Unit'].map((tag, i) => (
                     <div key={i} className="px-4 py-2 rounded-full border border-white/10 text-[10px] font-bold uppercase tracking-widest bg-white/5">{tag}</div>
                  ))}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-6 glass rounded-2xl border border-white/5">
-                   <div className="text-3xl font-black text-white mb-1">3000G</div>
+                <div className="p-5 md:p-6 glass rounded-2xl border border-white/5">
+                   <div className="text-2xl md:text-3xl font-black text-white mb-1">3000G</div>
                    <div className="text-[10px] font-bold text-white/30 uppercase tracking-widest">Impact Resistance</div>
                 </div>
-                <div className="p-6 glass rounded-2xl border border-white/5">
-                   <div className="text-3xl font-black text-golf-accent mb-1">20H+</div>
+                <div className="p-5 md:p-6 glass rounded-2xl border border-white/5">
+                   <div className="text-2xl md:text-3xl font-black text-golf-accent mb-1">20H+</div>
                    <div className="text-[10px] font-bold text-white/30 uppercase tracking-widest">Battery Life</div>
                 </div>
               </div>
@@ -810,36 +825,36 @@ const InfrastructureView = ({ onBack }: { onBack: () => void }) => {
           </div>
         </div>
       </section>
-      <section className="py-20 md:py-32 px-6 border-t border-white/5 relative overflow-hidden min-h-[100dvh] flex flex-col justify-center">
+      <section className="py-16 md:py-20 px-6 border-t border-white/5 relative overflow-hidden flex flex-col justify-center">
         <div className="absolute inset-0 bg-golf-accent/5 -z-10" />
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-accent/30 bg-golf-accent/5 text-golf-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-accent/30 bg-golf-accent/5 text-golf-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-6">
                 Proprietary AI Architecture
               </div>
-              <h2 className="text-5xl md:text-7xl font-bold mb-8 italic leading-tight">
+              <h2 className="text-4xl md:text-6xl font-bold mb-6 italic leading-tight">
                 "Stockfish<br />
                 <span className="text-golf-accent">for Golf"</span>
               </h2>
-              <p className="text-white/70 font-light text-xl leading-relaxed mb-10">
+              <p className="text-white/70 font-light text-base md:text-lg leading-relaxed mb-8">
                 The process is simple: we simulate an AI agent in real-time environmental conditions to benchmark human performance against optimal play. These high-fidelity simulations generate a comprehensive tactical heatmap, identifying strategic optimization points and critical decision paths - forming the ultimate foundation for an AI caddie.
               </p>
             </div>
 
             <div className="relative">
               <div className="absolute -inset-4 bg-golf-accent/20 blur-[100px] -z-10 animate-pulse" />
-              <div className="glass-dark aspect-square rounded-[3rem] border border-white/10 flex items-center justify-center overflow-hidden relative">
+              <div className="glass-dark aspect-square rounded-[2.5rem] md:rounded-[3rem] border border-white/10 flex items-center justify-center overflow-hidden relative">
                 <div className="absolute inset-0 opacity-20">
                   <div className="w-full h-full" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(163, 230, 53, 0.2) 1px, transparent 0)', backgroundSize: '32px 32px' }} />
                 </div>
-                <div className="relative text-center p-12">
+                <div className="relative text-center p-8 md:p-12">
                   <div className="mb-6 inline-block p-4 rounded-full bg-golf-accent/10 border border-golf-accent/20">
                     <Globe className="text-golf-accent animate-spin-slow" size={48} />
                   </div>
-                  <h3 className="text-3xl font-bold mb-4 italic text-white">The Enabler.</h3>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-4 italic text-white">The Enabler.</h3>
                   <div className="h-px w-24 bg-golf-accent/50 mx-auto mb-6" />
-                  <p className="text-white/60 font-mono text-sm leading-relaxed">
+                  <p className="text-white/60 font-mono text-xs md:text-sm leading-relaxed">
                     [ SYSTEM_STATUS: OPERATIONAL ]<br />
                     [ ENGINE_TYPE: DYNAMIC_NORMALIZATION ]<br />
                     [ COMPUTE_LOAD: OPTIMAL ]
@@ -851,13 +866,13 @@ const InfrastructureView = ({ onBack }: { onBack: () => void }) => {
         </div>
       </section>
       {/* Secondary Logistics Section */}
-      <section className="py-20 md:py-32 px-6 border-t border-white/5 relative overflow-hidden min-h-[100dvh] flex flex-col justify-center">
+      <section className="py-16 md:py-20 px-6 border-t border-white/5 relative overflow-hidden flex flex-col justify-center">
         <HUDOverlay />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-golf-accent/5 blur-[150px] -z-10" />
         
         <div className="max-w-7xl mx-auto">
           {/* Animacja na całą szerokość, pełniąca rolę wizualnego finału */}
-          <div className="glass p-8 md:p-16 rounded-[3rem] border border-white/5 overflow-hidden relative group min-h-[500px] flex items-center">
+          <div className="glass p-6 md:p-12 lg:p-16 rounded-[2.5rem] md:rounded-[3rem] border border-white/5 overflow-hidden relative group min-h-[420px] flex items-center">
              <div className="absolute inset-0 z-0 opacity-50 group-hover:opacity-70 transition-opacity duration-1000">
                 <LoopingVideo src="/animacja.mp4" className="w-full h-full object-cover" />
                 {/* Gradient przyciemniający, żeby tekst był czytelny */}
@@ -865,11 +880,11 @@ const InfrastructureView = ({ onBack }: { onBack: () => void }) => {
              </div>
              
              <div className="relative z-10 max-w-2xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-accent/30 bg-golf-accent/5 text-golf-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-accent/30 bg-golf-accent/5 text-golf-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-4 md:mb-6">
                   Live Flow Visualization
                 </div>
-                <h3 className="text-4xl md:text-5xl font-bold mb-6 italic">Dynamic Ecosystem <br />Synchronization.</h3>
-                <p className="text-white/50 font-light text-lg leading-relaxed mb-8">
+                <h3 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 italic">Dynamic Ecosystem <br />Synchronization.</h3>
+                <p className="text-white/50 font-light text-base md:text-lg leading-relaxed mb-6 md:mb-8">
                    Witness the seamless coordination between the hardware mesh and cloud telemetry. Local ESP-NOW routing instantly pushes multi-hop data to the master node, ensuring real-time parity between the physical ball strike and digital scorecards.
                 </p>
                 
@@ -886,8 +901,15 @@ const InfrastructureView = ({ onBack }: { onBack: () => void }) => {
   );
 };
 
-const PlayerLanding = ({ onPrivacyClick }: { onPrivacyClick: () => void }) => {
+const PlayerLanding = ({ 
+  onPrivacyClick,
+  onTermsClick
+}: { 
+  onPrivacyClick: () => void;
+  onTermsClick?: () => void;
+}) => {
   const [email, setEmail] = useState("");
+  const [acknowledged, setAcknowledged] = useState(false);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [isLoaded, setIsLoaded] = useState(false);
   // --- CUSTOM ALERT DLA WAITLISTY ---
@@ -907,6 +929,10 @@ const PlayerLanding = ({ onPrivacyClick }: { onPrivacyClick: () => void }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if(!email) return;
+    if(!acknowledged) {
+      showAlert("Please check the box to acknowledge our terms and privacy policy.", "error");
+      return;
+    }
     setStatus('loading');
     
     try {
@@ -919,7 +945,7 @@ const PlayerLanding = ({ onPrivacyClick }: { onPrivacyClick: () => void }) => {
       });
       */
 
-      const scriptUrl = (import.meta as ImportMeta & {
+      let scriptUrl = (import.meta as ImportMeta & {
         env: { VITE_GOOGLE_SHEETS_URL?: string };
       }).env.VITE_GOOGLE_SHEETS_URL;
       
@@ -929,21 +955,22 @@ const PlayerLanding = ({ onPrivacyClick }: { onPrivacyClick: () => void }) => {
         return;
       }
 
-      const res = await fetch(scriptUrl, {
+      // Usunięcie ewentualnych cudzysłowów wklejonych w konfiguracji Vercela
+      scriptUrl = scriptUrl.replace(/^["']|["']$/g, '').trim();
+
+      await fetch(scriptUrl, {
         method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
         body: new URLSearchParams({ email: email })
       });
 
-      console.log(res.status);
-      console.log(await res.text());
-      
-      if (res.ok) {
-        setStatus('success');
-        setEmail("");
-        showAlert("Thank you for joining the waitlist. This helps a lot!", "success");
-      } else {
-        setStatus('error');
-      }
+      setStatus('success');
+      setEmail("");
+      setAcknowledged(false);
+      showAlert("Thank you for joining the waitlist. This helps a lot!", "success");
     } catch (err) {
       setStatus('error');
     }
@@ -996,13 +1023,27 @@ const PlayerLanding = ({ onPrivacyClick }: { onPrivacyClick: () => void }) => {
         <div className="scanline" />
 
         <div className="text-center z-20 max-w-4xl mt-0 md:mt-4">
+          <div className="flex justify-center mb-8 md:mb-10">
+            <div className="flex items-center gap-4 md:gap-5 group">
+              <div className="relative">
+                <div className="w-14 h-14 md:w-18 md:h-18 bg-golf-accent rounded-full flex items-center justify-center shadow-[0_0_35px_rgba(163,230,53,0.4)] group-hover:scale-105 transition-transform duration-500">
+                  <div className="w-4 h-4 md:w-5 md:h-5 bg-golf-dark rounded-full shadow-inner" />
+                </div>
+                <div className="absolute inset-0 bg-golf-accent blur-2xl opacity-30 -z-10" />
+              </div>
+              <span className="font-display font-black text-4xl sm:text-5xl md:text-7xl tracking-tighter uppercase italic drop-shadow-[0_0_25px_rgba(163,230,53,0.25)] select-none">
+                FAIRWAY<span className="text-golf-accent">OS</span>
+              </span>
+            </div>
+          </div>
+
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-accent/30 bg-golf-accent/5 text-golf-accent text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] mb-4 md:mb-6 shadow-[0_0_15px_rgba(163,230,53,0.2)]">
             <Zap size={12} /> Early Access Waitlist
           </div>
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold mb-3 md:mb-4 italic leading-tight">
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-extrabold mb-3 md:mb-4 leading-none selection:bg-white selection:text-black">
             <span className="sr-only">FairwayOS Global Golf E-Sports & Smart Ball Tracking. </span>
-            Stop searching. <br />
-            <span className="text-gradient drop-shadow-[0_0_40px_rgba(163,230,53,0.4)]">Start scoring.</span>
+            The Future <br />
+            <span className="text-gradient drop-shadow-[0_0_40px_rgba(163,230,53,0.4)]">Of Golf</span>
           </h1>
           <p className="text-sm sm:text-lg md:text-xl text-white/80 font-light max-w-xs sm:max-w-2xl mx-auto leading-relaxed drop-shadow-md">
             Never lose a golf ball again. Get professional-grade analytics right in your pocket and compete in global asynchronous leagues on real grass.
@@ -1016,7 +1057,7 @@ const PlayerLanding = ({ onPrivacyClick }: { onPrivacyClick: () => void }) => {
           transition={{ delay: 1 }}
           className="flex flex-col items-center gap-2 md:gap-3 mt-6 md:mt-10 z-20"
         >
-          <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-white/20">Scroll for Benefits</span>
+          <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-white/20">Scroll to Explore</span>
           <div className="w-[2px] h-8 md:h-12 bg-white/10 rounded-full relative overflow-hidden">
             <motion.div 
               animate={{ y: ["0%", "200%", "0%"], opacity: [0, 1, 0] }}
@@ -1027,56 +1068,109 @@ const PlayerLanding = ({ onPrivacyClick }: { onPrivacyClick: () => void }) => {
         </motion.div>
       </section>
 
-      {/* Sekcja wideo dla Gracza */}
-          <YouTubeVideoSection 
-            subtitle="See it in action" 
-            title="Welcome to the future of Golf" 
-            videoId="dQw4w9WgXcQ" 
-            scrollText="Ready for more? Scroll down to join the waitlist."
-          />
-
-      {/* 2. SEKCJA ZAWARTOŚCI I FORMULARZA */}
-      <section className="relative z-10 pt-20 pb-16 md:pt-24 md:pb-20 px-4 md:px-6 w-full flex flex-col justify-center items-center border-t border-white/5 bg-golf-dark min-h-[100dvh]">
-        {/* Tu przenieśliśmy limit szerokości, żeby tło na zewnątrz mogło dotknąć krawędzi */}
+      {/* 2. SEKCJA ZBIERANIA LEADÓW (WAITLIST) */}
+      <section className="relative z-10 py-12 md:py-16 px-4 md:px-6 w-full flex flex-col justify-center items-center border-t border-white/5 bg-black/20">
         <div className="max-w-7xl mx-auto w-full flex flex-col items-center">
-          
-          {/* Waitlist Formularz (Teraz jest PIERWSZY na górze) */}
-          <div className="glass-dark p-8 md:p-12 lg:p-16 rounded-[3rem] border border-white/10 max-w-3xl w-full text-center relative overflow-hidden shadow-2xl mb-12 lg:mb-20">
+          <div className="glass-dark p-6 md:p-10 lg:p-12 rounded-[2rem] md:rounded-[2.5rem] border border-white/10 max-w-3xl w-full text-center relative overflow-hidden shadow-2xl">
             <div className="absolute top-0 right-0 w-64 h-64 bg-golf-accent/10 blur-[100px] -z-10" />
-            <h2 className="text-2xl md:text-4xl font-bold mb-4 md:mb-6 italic">Accelerate Our Journey</h2>
-            <p className="text-white/50 text-sm md:text-base mb-8 md:mb-10 leading-relaxed max-w-2xl mx-auto">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4 italic">Accelerate Our Journey</h2>
+            <p className="text-white/50 text-sm md:text-base mb-6 md:mb-8 leading-relaxed max-w-2xl mx-auto">
               Leaving your email significantly accelerates our hardware manufacturing process and shows course owners the demand. Join the waitlist today.
             </p>
             
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 md:gap-4 max-w-xl mx-auto">
-              <input 
-                type="email" 
-                required
-                disabled={status === 'loading' || status === 'success'}
-                placeholder="player@example.com" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-grow bg-white/5 border border-white/10 rounded-xl md:rounded-2xl px-5 py-3 md:py-4 text-sm md:text-base text-white focus:outline-none focus:border-golf-accent/50 focus:bg-white/10 transition-all disabled:opacity-50 text-center sm:text-left"
-              />
-              <button 
-                type="submit" 
-                disabled={status === 'loading' || status === 'success'}
-                className="bg-golf-accent text-golf-dark font-bold px-6 py-3 md:py-4 rounded-xl md:rounded-2xl uppercase tracking-widest text-[10px] md:text-xs hover:bg-white hover:scale-105 active:scale-95 transition-all flex items-center justify-center min-w-[140px] md:min-w-[180px] disabled:opacity-80 disabled:hover:scale-100"
-              >
-                {status === 'idle' && "Join Waitlist"}
-                {status === 'loading' && <Loader2 size={16} className="animate-spin" />}
-                {status === 'success' && <><CheckCircle size={16} className="mr-2" /> Joined</>}
-                {status === 'error' && "Try Again"} 
-              </button>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-xl mx-auto">
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full">
+                <input 
+                  type="email" 
+                  required
+                  disabled={status === 'loading' || status === 'success'}
+                  placeholder="player@example.com" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="flex-grow bg-white/5 border border-white/10 rounded-xl md:rounded-2xl px-5 py-3 md:py-4 text-sm md:text-base text-white focus:outline-none focus:border-golf-accent/50 focus:bg-white/10 transition-all disabled:opacity-50 text-center sm:text-left"
+                />
+                <button 
+                  type="submit" 
+                  disabled={status === 'loading' || status === 'success' || !acknowledged}
+                  className="bg-golf-accent text-golf-dark font-bold px-6 py-3 md:py-4 rounded-xl md:rounded-2xl uppercase tracking-widest text-[10px] md:text-xs hover:bg-white hover:scale-105 active:scale-95 transition-all flex items-center justify-center min-w-[140px] md:min-w-[180px] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                >
+                  {status === 'idle' && "Join Waitlist"}
+                  {status === 'loading' && <Loader2 size={16} className="animate-spin" />}
+                  {status === 'success' && <><CheckCircle size={16} className="mr-2" /> Joined</>}
+                  {status === 'error' && "Try Again"} 
+                </button>
+              </div>
+
+              <label className="flex items-start gap-3 text-left cursor-pointer group select-none px-1">
+                <input 
+                  type="checkbox" 
+                  required
+                  checked={acknowledged}
+                  onChange={(e) => setAcknowledged(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 rounded border-white/30 bg-white/5 text-golf-accent accent-[#a3e635] focus:ring-0 cursor-pointer shrink-0"
+                />
+                <span className="text-[11px] md:text-xs text-white/60 group-hover:text-white/80 transition-colors leading-relaxed">
+                  I acknowledge that FairwayOS processes my email to manage waitlist participation and notifications in accordance with the{" "}
+                  <a 
+                    href="/privacy-policy" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onPrivacyClick();
+                    }} 
+                    className="text-golf-accent underline hover:text-white transition-colors cursor-pointer"
+                  >
+                    Privacy Policy
+                  </a>
+                  {onTermsClick && (
+                    <>
+                      {" "}and{" "}
+                      <a 
+                        href="/terms" 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          onTermsClick();
+                        }} 
+                        className="text-golf-accent underline hover:text-white transition-colors cursor-pointer"
+                      >
+                        Terms of Service
+                      </a>
+                    </>
+                  )}
+                  .
+                </span>
+              </label>
             </form>
             {status === 'success' && <p className="text-golf-accent text-xs md:text-sm mt-4 md:mt-6 font-bold tracking-widest uppercase">Thank you! You're on the list.</p>}
             {status === 'error' && <p className="text-red-400 text-xs md:text-sm mt-4 md:mt-6 font-bold tracking-widest uppercase">Something went wrong. Please try again.</p>}
             <p className="text-[9px] md:text-[10px] text-white/40 mt-6 leading-relaxed max-w-xl mx-auto text-left border-t border-white/5 pt-4 md:pt-6">
-              By joining the waitlist, you acknowledge that we process your email address to manage the waitlist and notify you about the product launch. We may share anonymous, aggregated demand statistics with golf course partners. See our <button type="button" onClick={onPrivacyClick} className="text-golf-accent underline hover:text-white transition-colors">Privacy Policy</button> for details.
+              Participation in the waitlist is voluntary and free of charge. You may terminate your participation at any time by contacting us. We may share anonymous, aggregated demand statistics with golf course partners.
             </p>
           </div>
+        </div>
+      </section>
 
-          {/* 4 Cechy (Teraz są na DOLE) */}
+      {/* 3. SEKCJA WIDEO DLA GRACZA */}
+      <YouTubeVideoSection 
+        className="bg-golf-dark"
+        subtitle="See it in action" 
+        title={
+          <>
+            Stop searching.{" "}
+            <span className="text-gradient drop-shadow-[0_0_40px_rgba(163,230,53,0.4)]">
+              Start scoring.
+            </span>
+          </>
+        } 
+        videoId="dQw4w9WgXcQ" 
+      />
+
+      {/* 4. SEKCJA CECH */}
+      <section className="relative overflow-hidden py-12 md:py-16 px-4 md:px-6 w-full flex flex-col justify-center items-center border-t border-white/5 bg-black/20">
+        <div className="absolute inset-0 bg-golf-accent/5 -z-10" />
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+          style={{ backgroundImage: 'radial-gradient(circle, #a3e635 1px, transparent 1px)', backgroundSize: '60px 60px' }} 
+        />
+        <div className="max-w-7xl mx-auto w-full flex flex-col items-center relative z-10">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 w-full">
             {[
               { icon: Target, title: "0 Lost Balls", desc: "Find your ball instantly with precise GPS/UWB tracking directly on your phone." },
@@ -1091,7 +1185,6 @@ const PlayerLanding = ({ onPrivacyClick }: { onPrivacyClick: () => void }) => {
               </div>
             ))}
           </div>
-
         </div>
       </section>
     </div>
@@ -1249,6 +1342,11 @@ const AnimatedNumber = ({ value, suffix = "", decimals = 1 }: { value: number, s
 };
 
 const GameLanding = ({ onBack }: { onBack: () => void }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
 
   const [appView, setAppView] = useState<'landing' | 'live_match' | 'auth' | 'map_select' | 'map_create' | 'verify' | 'auto_mesh' | 'target_lock'>('landing');
   
@@ -1814,39 +1912,51 @@ const GameLanding = ({ onBack }: { onBack: () => void }) => {
       <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,rgba(34,211,238,0.1),transparent_80%)] pointer-events-none" />
       
       {/* HEADER: Wspólny dla obu części (Landing i App Flow) */}
-      <nav className="relative z-50 flex justify-between items-center px-6 py-6 backdrop-blur-md border-b border-white/5 bg-black/40">
-        <button 
-          onClick={() => {
-            const isInnerView = ['map_create', 'verify', 'auto_mesh', 'target_lock', 'live_match'].includes(appView);
-            if (isInnerView) {
-              // Wracamy do Lobby, czyścimy aktywny stan pokoju
-              setRoomCode(null);
-              setActiveMap(null);
-              setTargetLocation(null);
-              setMatchState('waiting_for_qr');
-              setAppView('map_select');
-              // Opcjonalnie: Odświeżamy listę przy powrocie
-              if (user) {
-                fetch(`${API_URL}/users/${user.id}/rooms`)
-                  .then(res => res.json())
-                  .then(data => setUserRooms(data));
-              }
-            } else {
-              // Całkowite wyjście do strony głównej
+      <nav className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 py-4 backdrop-blur-md border-b border-white/5 bg-black/40">
+        <div className="flex items-center gap-3 md:gap-5">
+          <a
+            href="/"
+            onClick={(e) => {
+              e.preventDefault();
               onBack();
-            }
-          }} 
-          className="flex items-center gap-2 text-white/50 hover:text-cyan-400 text-xs font-bold uppercase tracking-widest transition-colors"
-        >
-          <ArrowLeft size={16} /> 
-          {['map_create', 'verify', 'auto_mesh', 'target_lock', 'live_match'].includes(appView) ? 'Back to Lobby' : 'Exit Game'}
-        </button>
+            }}
+            className="flex items-center gap-2 cursor-pointer group"
+          >
+            <div className="relative">
+              <div className="w-6 h-6 md:w-8 md:h-8 bg-golf-accent rounded-full flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(163,230,53,0.5)] group-hover:scale-105 transition-transform">
+                <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-golf-dark rounded-full shadow-inner" />
+              </div>
+              <div className="absolute inset-0 bg-golf-accent blur-md opacity-30 -z-10" />
+            </div>
+            <span className="font-display font-bold text-lg md:text-xl tracking-tighter text-white">Fairway<span className="text-golf-accent">OS</span></span>
+          </a>
+
+          {['map_create', 'verify', 'auto_mesh', 'target_lock', 'live_match'].includes(appView) && (
+            <button 
+              onClick={() => {
+                setRoomCode(null);
+                setActiveMap(null);
+                setTargetLocation(null);
+                setMatchState('waiting_for_qr');
+                setAppView('map_select');
+                if (user) {
+                  fetch(`${API_URL}/users/${user.id}/rooms`)
+                    .then(res => res.json())
+                    .then(data => setUserRooms(data));
+                }
+              }} 
+              className="flex items-center gap-1.5 text-white/50 hover:text-cyan-400 text-xs font-bold uppercase tracking-widest transition-colors pl-3 md:pl-4 border-l border-white/10"
+            >
+              <ArrowLeft size={14} /> Back to Lobby
+            </button>
+          )}
+        </div>
         <div className="text-white/50 text-[10px] uppercase font-bold tracking-widest font-mono">
           {user ? `User: ${user.email}` : "Not Authenticated"}
         </div>
       </nav>
 
-      <div className="relative z-10 flex-grow">
+      <div className={`relative z-10 flex-grow ${appView === 'landing' ? '' : 'pt-20'}`}>
         <AnimatePresence mode="wait">
           
           {/* =========================================
@@ -1856,7 +1966,20 @@ const GameLanding = ({ onBack }: { onBack: () => void }) => {
             <motion.div key="landing-view" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col w-full">
               
               {/* Główna sekcja Hero (Lobby) */}
-              <section className="relative h-[100dvh] w-full flex flex-col items-center justify-center px-4 md:px-6 overflow-hidden pt-0">
+              <section className="relative h-[100dvh] w-full flex flex-col items-center justify-center px-4 md:px-6 overflow-hidden pt-16">
+                {/* Background Image with Overlay */}
+                <div className="absolute inset-0 z-0 flex items-center justify-center text-center pointer-events-none">
+                  <img 
+                    src="/disc-range.jpg"
+                    alt="Disc Range Background" 
+                    className={`w-full h-full object-cover transition-opacity duration-1000 ${isLoaded ? 'opacity-40' : 'opacity-0'}`}
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-golf-dark/80 via-golf-dark/40 to-golf-dark/90" />
+                  <div className="absolute inset-0 bg-black/50" />
+                </div>
+
+                <HUDOverlay />
                 <div className="scanline" />
 
                 <div className="text-center z-20 max-w-4xl mt-0 md:mt-4">
@@ -1893,20 +2016,21 @@ const GameLanding = ({ onBack }: { onBack: () => void }) => {
                 </motion.div>
               </section>
 
-              {/* Odtwarzacz Wideo dla kroków - spójnie jako pełnoekranowa sekcja "Karta" */}
-              <section className="pt-20 pb-16 md:pt-24 md:pb-20 px-4 md:px-6 relative overflow-hidden bg-black/20 border-t border-white/5 min-h-[100dvh] flex flex-col justify-center items-center w-full">
+              {/* Odtwarzacz Wideo dla kroków - spójnie z układem strony głównej */}
+              <section className="py-12 md:py-16 px-4 md:px-6 relative overflow-hidden bg-black/20 border-t border-white/5 flex flex-col justify-center items-center w-full">
+                <div className="absolute top-0 right-0 w-1/2 h-full bg-cyan-400/5 blur-[150px] -z-10" />
                 
-                <div className="max-w-5xl mx-auto w-full text-center z-10 flex flex-col items-center justify-center h-full">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-400/30 bg-cyan-400/5 text-cyan-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-4 md:mb-6 shadow-[0_0_15px_rgba(34,211,238,0.1)]">
+                <div className="max-w-5xl mx-auto w-full text-center z-10 flex flex-col items-center justify-center">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-400/30 bg-cyan-400/5 text-cyan-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-3 md:mb-4 shadow-[0_0_15px_rgba(34,211,238,0.1)]">
                     <Play size={12} /> Step-by-step
                   </div>
-                  <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-10 italic">Watch Tutorial</h2>
+                  <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-5 md:mb-8 italic">Watch Tutorial</h2>
                   
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="w-full max-w-4xl max-h-[55vh] mx-auto aspect-video rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl glass p-2 md:p-4 z-10"
+                    className="relative w-full max-w-4xl aspect-video rounded-2xl md:rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl glass p-2 md:p-3 z-10"
                   >
                     <div className="w-full h-full rounded-xl overflow-hidden relative bg-black/50">
                       <iframe 
@@ -1922,90 +2046,120 @@ const GameLanding = ({ onBack }: { onBack: () => void }) => {
                 </div>
               </section>
 
-              {/* SEKJA STEPS */}
-              <section className="relative py-32 px-6 max-w-7xl mx-auto w-full z-10 border-t border-white/5">
-                <div className="text-center mb-24">
-                  <h2 className="text-4xl md:text-5xl font-bold mb-4 italic">Set up in <span className="text-cyan-400">4 simple steps.</span></h2>
-                  <p className="text-white/50">From arriving at the park to your first high-speed throw in under 3 minutes.</p>
-                </div>
-
-                <div className="space-y-32">
-                  {/* STEP 1 */}
-                  <div className="grid lg:grid-cols-2 gap-12 items-center">
-                    <div className="order-2 lg:order-1 glass rounded-3xl aspect-[4/3] flex items-center justify-center p-8 border border-white/10 relative group overflow-hidden">
-                      <div className="absolute inset-0 bg-cyan-400/5" />
-                      <div className="relative z-10 text-center">
-                        <img src="/Grid.png" alt="Grid" className="w-full h-full object-cover" />
-                      </div>
-                    </div>
-                    <div className="order-1 lg:order-2">
-                      <span className="text-cyan-400 font-mono text-sm tracking-widest uppercase mb-4 block">Step 01</span>
-                      <h3 className="text-3xl font-bold mb-4">Choose Your Arena</h3>
-                      <p className="text-white/50 leading-relaxed">
-                        Select an existing community map or create your own. Using Maps integration and your phone's GPS, simply drop pins where you plan to play to establish the digital boundary.
-                      </p>
-                    </div>
+              {/* SEKCJA STEPS - dopasowane marginesy i tło sekcji */}
+              <section className="relative py-12 md:py-16 px-4 md:px-6 w-full flex flex-col justify-center items-center border-t border-white/5 bg-golf-dark overflow-hidden">
+                <div className="max-w-7xl mx-auto w-full z-10">
+                  <div className="text-center mb-10 md:mb-14">
+                    <h2 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4 italic">Set up in <span className="text-cyan-400">4 simple steps.</span></h2>
+                    <p className="text-white/50 text-sm md:text-base max-w-2xl mx-auto">From arriving at the park to your first high-speed throw in under 3 minutes.</p>
                   </div>
 
-                  {/* STEP 2 */}
-                  <div className="grid lg:grid-cols-2 gap-12 items-center">
-                    <div>
-                      <span className="text-cyan-400 font-mono text-sm tracking-widest uppercase mb-4 block">Step 02</span>
-                      <h3 className="text-3xl font-bold mb-4">Deploy the Mesh</h3>
-                      <p className="text-white/50 leading-relaxed">
-                        Place the physical UWB pillars according to the map on your screen. Once they turn on, they automatically connect to each other and to the cloud. Click "Accept Setup" on your phone. (~2 mins)
-                      </p>
+                  <div className="space-y-12 md:space-y-16">
+                    {/* STEP 1 */}
+                    <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+                      <div className="order-2 lg:order-1 glass rounded-3xl aspect-[4/3] flex items-center justify-center p-6 md:p-8 border border-white/10 relative group overflow-hidden">
+                        <div className="absolute inset-0 bg-cyan-400/5" />
+                        <div className="relative z-10 text-center w-full h-full flex items-center justify-center">
+                          <img src="/Grid.png" alt="Grid" className="w-full h-full object-contain" />
+                        </div>
+                      </div>
+                      <div className="order-1 lg:order-2">
+                        <span className="text-cyan-400 font-mono text-sm tracking-widest uppercase mb-3 block">Step 01</span>
+                        <h3 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">Choose Your Arena</h3>
+                        <p className="text-white/50 text-sm md:text-base leading-relaxed">
+                          Select an existing community map or create your own. Using Maps integration and your phone's GPS, simply drop pins where you plan to play to establish the digital boundary.
+                        </p>
+                      </div>
                     </div>
-                    <div className="glass-dark rounded-3xl p-8 border border-white/10 relative">
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-400/10 blur-3xl" />
-                      <div className="flex flex-col gap-4 relative z-10">
-                        {[1, 2, 3, 4].map((pillar) => (
-                          <div key={pillar} className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5">
-                            <div className="flex items-center gap-3">
-                              <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                              <span className="text-sm font-mono text-white/80">NODE_UWB_{pillar}</span>
+
+                    {/* STEP 2 */}
+                    <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+                      <div>
+                        <span className="text-cyan-400 font-mono text-sm tracking-widest uppercase mb-3 block">Step 02</span>
+                        <h3 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">Deploy the Mesh</h3>
+                        <p className="text-white/50 text-sm md:text-base leading-relaxed">
+                          Place the physical UWB pillars according to the map on your screen. Once they turn on, they automatically connect to each other and to the cloud. Click "Accept Setup" on your phone. (~2 mins)
+                        </p>
+                      </div>
+                      <div className="glass-dark rounded-3xl p-6 md:p-8 border border-white/10 relative">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-400/10 blur-3xl" />
+                        <div className="flex flex-col gap-3 md:gap-4 relative z-10">
+                          {[1, 2, 3, 4].map((pillar) => (
+                            <div key={pillar} className="flex items-center justify-between p-3.5 md:p-4 bg-white/5 rounded-xl border border-white/5">
+                              <div className="flex items-center gap-3">
+                                <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                                <span className="text-xs md:text-sm font-mono text-white/80">NODE_UWB_{pillar}</span>
+                              </div>
+                              <span className="text-[10px] md:text-xs text-cyan-400 uppercase tracking-widest font-bold">Connected</span>
                             </div>
-                            <span className="text-xs text-cyan-400 uppercase tracking-widest">Connected</span>
-                          </div>
-                        ))}
-                        <button disabled className="mt-4 bg-white/10 text-white/50 py-3 rounded-xl text-xs uppercase tracking-widest font-bold">Setup Accepted</button>
+                          ))}
+                          <button disabled className="mt-2 md:mt-4 bg-white/10 text-white/50 py-3 rounded-xl text-xs uppercase tracking-widest font-bold">Setup Accepted</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* STEP 3 */}
+                    <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+                      <div className="order-2 lg:order-1 glass rounded-3xl aspect-[4/3] flex items-center justify-center p-6 md:p-8 border border-white/10 relative">
+                        <img src="/Target.png" alt="Target" className="w-full h-full object-contain" />
+                      </div>
+                      <div className="order-1 lg:order-2">
+                        <span className="text-cyan-400 font-mono text-sm tracking-widest uppercase mb-3 block">Step 03</span>
+                        <h3 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">Lock the Target</h3>
+                        <p className="text-white/50 text-sm md:text-base leading-relaxed">
+                          Walk with the smart disc to your desired target location. Stand still, click "Target Confirmed" in the app, and leave a physical indicator (like a flag or a stick). The system now knows exactly where to calculate distance to.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* STEP 4 */}
+                    <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+                      <div>
+                        <span className="text-cyan-400 font-mono text-sm tracking-widest uppercase mb-3 block">Step 04</span>
+                        <h3 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">Scan, Throw, Dominate</h3>
+                        <p className="text-white/50 text-sm md:text-base leading-relaxed mb-4 md:mb-6">
+                          Before throwing, quickly scan the QR code on the disc to tag the throw to your profile. The line between the first two pillars acts as your starting line.
+                        </p>
+                        <ul className="space-y-3 md:space-y-4 text-xs md:text-sm text-white/70">
+                          <li className="flex items-center gap-3"><QrCode size={16} className="text-cyan-400 shrink-0" /> Instant Player Tagging</li>
+                          <li className="flex items-center gap-3"><BarChart3 size={16} className="text-cyan-400 shrink-0" /> Speed & Distance Analytics</li>
+                          <li className="flex items-center gap-3"><Target size={16} className="text-cyan-400 shrink-0" /> Multiple Modes (Direct, Dartboard, Hazards)</li>
+                        </ul>
+                      </div>
+                      <div className="glass rounded-3xl aspect-[4/3] flex items-center justify-center p-6 md:p-8 border border-white/10 relative group overflow-hidden">
+                        <div className="absolute inset-0 bg-blue-500/10" />
+                        <div className="relative z-10 text-center w-full h-full flex items-center justify-center">
+                          <img src="/Shots.png" alt="Shots" className="w-full h-full object-contain" />
+                        </div>
                       </div>
                     </div>
                   </div>
+                </div>
+              </section>
 
-                  {/* STEP 3 */}
-                  <div className="grid lg:grid-cols-2 gap-12 items-center">
-                    <div className="order-2 lg:order-1 glass rounded-3xl aspect-[4/3] flex items-center justify-center p-8 border border-white/10">
-                      <img src="/Target.png" alt="Target" className="absolute w-full h-full object-contain p-8" />
-                    </div>
-                    <div className="order-1 lg:order-2">
-                      <span className="text-cyan-400 font-mono text-sm tracking-widest uppercase mb-4 block">Step 03</span>
-                      <h3 className="text-3xl font-bold mb-4">Lock the Target</h3>
-                      <p className="text-white/50 leading-relaxed">
-                        Walk with the smart disc to your desired target location. Stand still, click "Target Confirmed" in the app, and leave a physical indicator (like a flag or a stick). The system now knows exactly where to calculate distance to.
-                      </p>
-                    </div>
+              {/* SEKCJA TEAM */}
+              <section className="py-16 md:py-20 px-4 md:px-6 relative overflow-hidden bg-black/20 border-t border-white/5 flex flex-col justify-center items-center w-full">
+                <div className="absolute inset-0 bg-golf-accent/5 -z-10" />
+                <div 
+                  className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+                  style={{ backgroundImage: 'radial-gradient(circle, #a3e635 1px, transparent 1px)', backgroundSize: '60px 60px' }} 
+                />
+                
+                <div className="max-w-5xl mx-auto w-full text-center z-10 flex flex-col items-center justify-center">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-accent/30 bg-golf-accent/5 text-golf-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-4 md:mb-6 shadow-[0_0_15px_rgba(163,230,53,0.1)]">
+                    <Users size={12} /> The Team
                   </div>
-
-                  {/* STEP 4 */}
-                  <div className="grid lg:grid-cols-2 gap-12 items-center">
-                    <div>
-                      <span className="text-cyan-400 font-mono text-sm tracking-widest uppercase mb-4 block">Step 04</span>
-                      <h3 className="text-3xl font-bold mb-4">Scan, Throw, Dominate</h3>
-                      <p className="text-white/50 leading-relaxed mb-6">
-                        Before throwing, quickly scan the QR code on the disc to tag the throw to your profile. The line between the first two pillars acts as your starting line.
-                      </p>
-                      <ul className="space-y-4 text-sm text-white/70">
-                        <li className="flex items-center gap-3"><QrCode size={16} className="text-cyan-400" /> Instant Player Tagging</li>
-                        <li className="flex items-center gap-3"><BarChart3 size={16} className="text-cyan-400" /> Speed & Distance Analytics</li>
-                        <li className="flex items-center gap-3"><Target size={16} className="text-cyan-400" /> Multiple Modes (Direct, Dartboard, Hazards)</li>
-                      </ul>
-                    </div>
-                    <div className="glass rounded-3xl aspect-[4/3] flex items-center justify-center p-8 border border-white/10 relative group overflow-hidden">
-                      <div className="absolute inset-0 bg-blue-500/10" />
-                      <div className="relative z-10 text-center">
-                        <img src="/Shots.png" alt="Shots" className="w-full h-full object-contain p-8" />
-                      </div>
+                  <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-10 italic">
+                    Meet the <span className="text-golf-accent">Team.</span>
+                  </h2>
+                  
+                  <div className="relative w-full max-w-4xl rounded-2xl md:rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl glass p-2 md:p-3">
+                    <div className="w-full rounded-xl md:rounded-2xl overflow-hidden relative bg-black/50">
+                      <img 
+                        src="/team.jpg" 
+                        alt="FairwayOS Team" 
+                        className="w-full h-auto object-cover max-h-[75vh]"
+                      />
                     </div>
                   </div>
                 </div>
@@ -2731,7 +2885,7 @@ const PrivacyPolicy = ({ onBack }: { onBack: () => void }) => {
           <div className="space-y-8 text-sm text-white/70 leading-relaxed">
             <section>
               <h2 className="text-golf-accent font-bold text-lg mb-3">1. Data Controller</h2>
-              <p>The Data Controller for your personal data is <strong>FairwayOS Sp. z o.o.</strong> based in Poland (ul. Gospodarcza 26, 20-213 Lublin). You can contact us regarding your data privacy via any of the contact methods on our website.</p>
+              <p>The Data Controller for your personal data is <strong>FairwayOS Sp. z o.o.</strong> based in Poland (ul. Gospodarcza 26, 20-213 Lublin). You can contact us regarding your data privacy via email contact@fairwayos.tech.</p>
             </section>
 
             <section>
@@ -2750,7 +2904,12 @@ const PrivacyPolicy = ({ onBack }: { onBack: () => void }) => {
             </section>
 
             <section>
-              <h2 className="text-golf-accent font-bold text-lg mb-3">4. Your GDPR Rights & Complaints</h2>
+              <h2 className="text-golf-accent font-bold text-lg mb-3">4. Cookies & Analytics</h2>
+              <p>We use cookies and similar technologies to measure website traffic and analyze how visitors interact with our platform. These insights help us optimize user experience and evaluate interest in our technology. You can control or disable cookies at any time through your browser settings.</p>
+            </section>
+
+            <section>
+              <h2 className="text-golf-accent font-bold text-lg mb-3">5. Your GDPR Rights & Complaints</h2>
               <p>Under the GDPR, you have the right to access, rectify, or erase your personal data, as well as restrict or object to its processing. You also have the right to withdraw your consent at any time.</p>
               <p className="mt-2">If you believe your data is being processed unlawfully, you have the <strong>right to lodge a complaint with the supervisory authority</strong> (in Poland: Prezes Urzędu Ochrony Danych Osobowych - PUODO, ul. Stawki 2, 00-193 Warszawa).</p>
             </section>
@@ -2761,8 +2920,69 @@ const PrivacyPolicy = ({ onBack }: { onBack: () => void }) => {
   );
 };
 
+const TermsOfService = ({ onBack }: { onBack: () => void }) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <div className="min-h-screen flex flex-col bg-golf-dark relative overflow-hidden pt-32 pb-24 px-6">
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,rgba(163,230,53,0.05),transparent_80%)] pointer-events-none" />
+      
+      <div className="max-w-4xl mx-auto w-full relative z-10">
+        <button onClick={onBack} className="flex items-center gap-2 text-white/50 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors mb-8">
+          <ArrowLeft size={16} /> Back
+        </button>
+
+        <div className="glass p-10 md:p-16 rounded-[3rem] border border-white/10 shadow-2xl">
+          <h1 className="text-4xl font-bold mb-4 italic">Terms of Service</h1>
+          <p className="text-white/40 text-xs uppercase tracking-widest mb-12">Last Updated: September 2026</p>
+
+          <div className="space-y-8 text-sm text-white/70 leading-relaxed">
+            <section>
+              <h2 className="text-golf-accent font-bold text-lg mb-3">1. Overview & Acceptance</h2>
+              <p>Welcome to FairwayOS. By accessing or using our website, participating in our early access waitlist, or interacting with our services, you agree to comply with and be bound by these Terms of Service. If you disagree with any part of these terms, please do not use our services.</p>
+            </section>
+
+            <section>
+              <h2 className="text-golf-accent font-bold text-lg mb-3">2. Service Description & Early Access</h2>
+              <p>FairwayOS provides smart telemetry, hardware-enabled tracking, and asynchronous competitive platforms for golf courses and players. The current web platform provides product previews, telemetry simulations, and an Early Access Waitlist. Features and specifications are subject to continuous evolution and testing.</p>
+              <p className="mt-3 text-white/60">Participation in the waitlist is voluntary and free of charge. You may terminate your waitlist participation at any time by sending a request to our contact email.</p>
+            </section>
+
+            <section>
+              <h2 className="text-golf-accent font-bold text-lg mb-3">3. Intellectual Property</h2>
+              <p>All trademarks, proprietary hardware designs, telemetry algorithms, software, graphical assets, and brand elements (including the FairwayOS name and logos) are the exclusive property of <strong>FairwayOS Sp. z o.o.</strong> or its licensors. Unauthorized copying, reverse engineering, or reproduction is strictly prohibited.</p>
+            </section>
+
+            <section>
+              <h2 className="text-golf-accent font-bold text-lg mb-3">4. Limitation of Liability</h2>
+              <p>FairwayOS and its representatives provide this platform on an "as is" and "as available" basis without warranties of any kind. We shall not be liable for any indirect, incidental, or consequential damages resulting from the use or inability to use our services.</p>
+            </section>
+
+            <section>
+              <h2 className="text-golf-accent font-bold text-lg mb-3">5. Contact Information</h2>
+              <p>The platform is operated by <strong>FairwayOS Sp. z o.o.</strong>, ul. Gospodarcza 26, 20-213 Lublin, Poland (NIP: 9462770292, KRS: 0001255179). For inquiries regarding these Terms of Service, please contact us at <a href="mailto:contact@fairwayos.tech" className="text-golf-accent hover:underline">contact@fairwayos.tech</a>.</p>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const getInitialView = (): 'landing' | 'infrastructure' | 'game' | 'privacy' | 'terms' => {
+  if (typeof window === 'undefined') return 'landing';
+  const path = window.location.pathname.toLowerCase().replace(/\/+$/, '');
+  if (path === '/disc-range') return 'game';
+  if (path === '/privacy-policy' || path === '/privacy') return 'privacy';
+  if (path === '/terms' || path === '/terms-of-service') return 'terms';
+  if (path === '/infrastructure') return 'infrastructure';
+  return 'landing';
+};
+
 export default function App() {
-  const [currentView, setCurrentView] = useState<'landing' | 'infrastructure' | 'game' | 'privacy'>('landing');
+  const [currentView, setCurrentView] = useState<'landing' | 'infrastructure' | 'game' | 'privacy' | 'terms'>(getInitialView);
   
   // Zmienne do "powrotu" z infrastructure (było wcześniej)
   const [scrollTarget, setScrollTarget] = useState<string | null>(null);
@@ -2772,8 +2992,43 @@ export default function App() {
   const [viewMode, setViewMode] = useState<'player' | 'investor'>('player');
 
   // NOWE: Zmienne do zapamiętywania stanu przed włączeniem Gry
-  const [preGameView, setPreGameView] = useState<'landing' | 'infrastructure' | 'privacy'>('landing');
+  const [preGameView, setPreGameView] = useState<'landing' | 'infrastructure' | 'privacy' | 'terms'>('landing');
   const [savedScrollY, setSavedScrollY] = useState(0);
+
+  // Obsługa przycisków Wstecz / Dalej w przeglądarce
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentView(getInitialView());
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Synchronizacja title i canonical tagu dla SEO
+  useEffect(() => {
+    let title = "FairwayOS | The Future of Golf: Smart Balls, UWB Telemetry & E-Sports";
+    let canonical = "https://fairwayos.tech/";
+
+    if (currentView === 'game') {
+      title = "FairwayOS | Disc Range - Autonomous Target Lock & Match Radar";
+      canonical = "https://fairwayos.tech/disc-range";
+    } else if (currentView === 'privacy') {
+      title = "FairwayOS | Privacy Policy";
+      canonical = "https://fairwayos.tech/privacy-policy";
+    } else if (currentView === 'terms') {
+      title = "FairwayOS | Terms of Service";
+      canonical = "https://fairwayos.tech/terms";
+    } else if (currentView === 'infrastructure') {
+      title = "FairwayOS | Technical Infrastructure & UWB Architecture";
+      canonical = "https://fairwayos.tech/infrastructure";
+    }
+
+    document.title = title;
+    const canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (canonicalLink) {
+      canonicalLink.setAttribute('href', canonical);
+    }
+  }, [currentView]);
 
   useEffect(() => {
     if (currentView === 'landing' && scrollTarget) {
@@ -2792,6 +3047,9 @@ export default function App() {
     setViewMode(mode);
     if (currentView !== 'landing') {
       setCurrentView('landing');
+      if (window.location.pathname !== '/') {
+        window.history.pushState({ view: 'landing' }, '', '/');
+      }
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -2801,6 +3059,9 @@ export default function App() {
     if (currentView !== 'landing') {
       setScrollTarget(id);
       setCurrentView('landing');
+      if (window.location.pathname !== '/') {
+        window.history.pushState({ view: 'landing' }, '', '/');
+      }
     } else {
       const element = document.getElementById(id);
       if (element) {
@@ -2814,6 +3075,7 @@ export default function App() {
   const openInfrastructure = (sourceId: string) => {
     setReturnTarget(sourceId);
     setCurrentView('infrastructure');
+    window.history.pushState({ view: 'infrastructure' }, '', '/infrastructure');
   };
 
   // NOWA FUNKCJA: Otwieranie widoku gry i zapamiętywanie scrolla
@@ -2821,12 +3083,17 @@ export default function App() {
     setSavedScrollY(window.scrollY); // Zapamiętujemy dokładną pozycję (piksele)
     setPreGameView(currentView === 'game' ? 'landing': currentView);
     setCurrentView('game');
+    if (window.location.pathname !== '/disc-range') {
+      window.history.pushState({ view: 'game' }, '', '/disc-range');
+    }
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   // NOWA FUNKCJA: Zamykanie gry i powrót do dokładnego miejsca
   const handleExitGame = () => {
     setCurrentView(preGameView);
+    const targetUrl = preGameView === 'landing' ? '/' : preGameView === 'privacy' ? '/privacy-policy' : preGameView === 'terms' ? '/terms' : preGameView === 'infrastructure' ? '/infrastructure' : '/';
+    window.history.pushState({ view: preGameView }, '', targetUrl);
     // Używamy setTimeout, żeby DOM zdążył się przemapować przed próbą scrollowania
     setTimeout(() => {
       window.scrollTo({ top: savedScrollY, behavior: 'instant' });
@@ -2834,6 +3101,17 @@ export default function App() {
   };
   const handlePrivacyClick = () => {
     setCurrentView('privacy');
+    window.history.pushState({ view: 'privacy' }, '', '/privacy-policy');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+  const handleTermsClick = () => {
+    setCurrentView('terms');
+    window.history.pushState({ view: 'terms' }, '', '/terms');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+  const handleBackToLanding = () => {
+    setCurrentView('landing');
+    window.history.pushState({ view: 'landing' }, '', '/');
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
   return (
@@ -2859,7 +3137,17 @@ export default function App() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.4 }}
           >
-            <PrivacyPolicy onBack={() => setCurrentView('landing')} />
+            <PrivacyPolicy onBack={handleBackToLanding} />
+          </motion.div>
+        ) : currentView === 'terms' ? (
+          <motion.div
+            key="terms-view"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.4 }}
+          >
+            <TermsOfService onBack={handleBackToLanding} />
           </motion.div>
         ) : currentView === 'game' ? (
           <motion.div
@@ -2881,28 +3169,28 @@ export default function App() {
           >
             {/* PRZEKŁADKA GRACZ vs INWESTOR */}
             {viewMode === 'player' ? (
-              <PlayerLanding onPrivacyClick={handlePrivacyClick} />
+              <PlayerLanding onPrivacyClick={handlePrivacyClick} onTermsClick={handleTermsClick} />
             ) : (
               <>
                 <Hero />
                 <YouTubeVideoSection 
                   subtitle="See it in action" 
-                  title="Why FairwayOS is a Game Changer" 
+                  title="A Game Changer" 
                   videoId="dQw4w9WgXcQ" 
                 />
-                <section id="vision" className="py-24 px-6 relative overflow-hidden bg-golf-dark">
+                <section id="vision" className="py-16 md:py-20 px-4 md:px-6 relative overflow-hidden bg-golf-dark">
               <div className="absolute top-0 left-0 w-full h-full bg-golf-accent/[0.03] -z-10" />
               <div className="max-w-7xl mx-auto">
-                <div className="text-center mb-20">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/5 text-red-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-6">
+                <div className="text-center mb-12 md:mb-16">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/5 text-red-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-4 md:mb-6">
                     The Problem: Golf is Analog
                   </div>
-                  <h2 className="text-4xl md:text-6xl font-bold mb-6 italic">Decoupling <span className="text-golf-accent font-black tracking-tighter">Latency.</span></h2>
-                  <p className="text-white/40 max-w-2xl mx-auto italic font-light text-lg">
+                  <h2 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 italic">Decoupling <span className="text-golf-accent font-black tracking-tighter">Latency.</span></h2>
+                  <p className="text-white/40 max-w-2xl mx-auto italic font-light text-base md:text-lg">
                     Players lose ~5 minutes per shot searching for balls, causing massive bottlenecks ("Pace of Play" issues) that cost courses tens of thousands in lost Tee Times.
                   </p>
                 </div>
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid md:grid-cols-3 gap-6 md:gap-8">
                   <FeatureCard 
                     icon={Zap}
                     title="End Analog Play"
@@ -2950,15 +3238,15 @@ export default function App() {
             )}
 
             {/* 7. LEADERSHIP & INVESTMENT ASK */}
-            <section id="leadership-section" className="py-32 px-6 relative overflow-hidden border-t border-white/5">
+            <section id="leadership-section" className="py-16 md:py-24 px-4 md:px-6 relative overflow-hidden border-t border-white/5">
               <div className="absolute inset-0 bg-golf-accent/5 -z-10" />
               <div className="max-w-7xl mx-auto relative z-10">
                 <div id="leadership" className="max-w-4xl mx-auto">
-                  <h3 className="text-xl font-bold mb-16 uppercase tracking-widest text-golf-accent flex items-center justify-center gap-3">
+                  <h3 className="text-xl font-bold mb-10 md:mb-14 uppercase tracking-widest text-golf-accent flex items-center justify-center gap-3">
                     <div className="w-2 h-2 bg-golf-accent rounded-full shadow-[0_0_8px_#a3e635]" />
                     Founding Team
                   </h3>
-                  <div className="grid md:grid-cols-2 gap-20">
+                  <div className="grid md:grid-cols-2 gap-10 md:gap-16">
                     <div className="relative group text-center">
                       <div className="flex items-center justify-center gap-3 mb-4">
                         <h4 className="text-3xl font-bold transition-colors">Hugo Piber-Dąbrowski</h4>
@@ -2967,11 +3255,11 @@ export default function App() {
                         </a>
                       </div>
                       <p className="text-sm text-white/40 uppercase tracking-widest mb-3 font-medium">CEO & R&D Lead | Big Data @ SGH</p>
-                      <p className="text-xs text-white/20 mb-6 italic leading-relaxed max-w-sm mx-auto">RL Algorithms for CAPEX optimization & UWB Mesh. Currently technology consultant @ EY.</p>
-                      <div className="flex flex-col items-center gap-1">
-                        <p className="text-xs text-golf-accent/70 font-mono">hugopdmat@gmail.com</p>
-                        <p className="text-xs text-white/40 font-mono">+48 667 551 555</p>
-                      </div>
+                      <p className="text-xs text-white/30 mb-6 italic leading-relaxed max-w-sm mx-auto">
+                        RL Algorithms for CAPEX optimization & UWB Mesh.
+                        <br />
+                        Currently Technology Consultant @ EY.
+                      </p>
                     </div>
                     <div className="relative group text-center">
                       <div className="flex items-center justify-center gap-3 mb-4">
@@ -2981,12 +3269,23 @@ export default function App() {
                         </a>
                       </div>
                       <p className="text-sm text-white/40 uppercase tracking-widest mb-3 font-medium">COO & Mobile Dev | Big Data @ SGH</p>
-                      <p className="text-xs text-white/20 mb-6 italic leading-relaxed max-w-sm mx-auto">Business Analytics & Flutter Developer. Currently Data Analyst @ Payback.</p>
-                      <div className="flex flex-col items-center gap-1">
-                        <p className="text-xs text-golf-accent/70 font-mono">julek.grzybowski@gmail.com</p>
-                        <p className="text-xs text-white/40 font-mono">+48 663 310 888</p>
-                      </div>
+                      <p className="text-xs text-white/30 mb-6 italic leading-relaxed max-w-sm mx-auto">
+                        Business Analytics & Flutter Developer.
+                        <br />
+                        Currently Data Analyst @ PAYBACK.
+                      </p>
                     </div>
+                  </div>
+
+                  {/* Centralny kontakt firmowy */}
+                  <div className="mt-14 text-center">
+                    <a 
+                      href="mailto:contact@fairwayos.tech"
+                      className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full border border-golf-accent/30 bg-golf-accent/5 hover:bg-golf-accent/15 text-golf-accent text-sm font-mono tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(163,230,53,0.15)] group"
+                    >
+                      <Mail size={16} className="group-hover:scale-110 transition-transform" />
+                      <span>contact@fairwayos.tech</span>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -2997,20 +3296,49 @@ export default function App() {
           <InfrastructureView onBack={() => {
             setScrollTarget(returnTarget);
             setCurrentView('landing');
+            window.history.pushState({ view: 'landing' }, '', '/');
           }} />
         )}
       </AnimatePresence>
 
-      <footer className={`py-24 px-6 border-t border-white/5 text-center relative overflow-hidden ${currentView === 'infrastructure' ? 'bg-black/30' : 'bg-golf-dark'}`}>
-        <div className="flex justify-center items-center gap-3 mb-10">
-          <div className="w-8 h-8 bg-golf-accent/20 rounded-full flex items-center justify-center">
-            <div className="w-2 h-2 bg-golf-accent rounded-full shadow-[0_0_10px_theme('colors.golf.accent')]" />
+      <footer className={`py-12 md:py-16 px-6 border-t border-white/5 text-center relative overflow-hidden ${currentView === 'infrastructure' ? 'bg-black/30' : 'bg-golf-dark'}`}>
+        <div className="flex justify-center items-center gap-3 mb-6 md:mb-8">
+          <div className="relative">
+            <div className="w-8 h-8 bg-golf-accent rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(163,230,53,0.5)]">
+              <div className="w-2 h-2 bg-golf-dark rounded-full shadow-inner" />
+            </div>
+            <div className="absolute inset-0 bg-golf-accent blur-md opacity-30 -z-10" />
           </div>
           <span className="font-display font-bold text-2xl tracking-tighter uppercase">Fairway<span className="text-golf-accent">OS</span></span>
         </div>
         <p className="text-white/20 text-[10px] uppercase tracking-[0.5em] mb-4">Deep Tech from Poland | Scaling to USA</p>
-        <p className="text-white/40 text-[10px]">© 2026 FairwayOS Sp. z o.o. ALL DATA ENCRYPTED.</p>
+        
+        <div className="flex flex-col items-center justify-center gap-2 mb-5 text-xs text-white/40">
+          <a 
+            href="/privacy-policy" 
+            onClick={(e) => {
+              e.preventDefault();
+              handlePrivacyClick();
+            }} 
+            className="hover:text-golf-accent transition-colors underline-offset-4 hover:underline cursor-pointer"
+          >
+            Privacy Policy
+          </a>
+          <a 
+            href="/terms" 
+            onClick={(e) => {
+              e.preventDefault();
+              handleTermsClick();
+            }} 
+            className="hover:text-golf-accent transition-colors underline-offset-4 hover:underline cursor-pointer"
+          >
+            Terms of Service
+          </a>
+        </div>
+
+        <p className="text-white/40 text-[10px]">© 2026 FairwayOS. All rights reserved.</p>
       </footer>
+      <Analytics />
     </div>
   );
 }

@@ -1,6 +1,10 @@
 {
   "name": "FairwayOS - The Future of Golf",
   "description": "Autonomous Golf Telemetry & Global E-sports Platform. Transforming the game with Smart Ball technology and real-grass digital competition.",
-  "requestFramePermissions": [],
-  "majorCapabilities": []
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

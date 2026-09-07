@@ -1,7 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <circle cx="16" cy="16" r="14" fill="#0c0c0c" stroke="#a3e635" stroke-width="2"/>
-  <circle cx="16" cy="16" r="4" fill="#a3e635">
-    <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" />
-  </circle>
-  <path d="M16 4 C 22 4, 28 10, 28 16" fill="none" stroke="#a3e635" stroke-width="1" stroke-linecap="round" opacity="0.6" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <!-- Neon glow filter -->
+    <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#a3e635" flood-opacity="0.8"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#a3e635" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Solid vibrant neon circle with glow -->
+  <circle cx="32" cy="32" r="28" fill="#a3e635" filter="url(#neon-glow)" />
+
+  <!-- Inner dark center dot, matching the site branding -->
+  <circle cx="32" cy="32" r="8" fill="#0c0c0c" />
 </svg>

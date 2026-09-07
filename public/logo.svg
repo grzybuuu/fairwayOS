@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 220" width="100%" height="100%">
+  <defs>
+    <style type="text/css">
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,900&amp;display=swap');
+      .logo-text {
+        font-family: 'Outfit', 'Arial Black', 'Impact', sans-serif;
+        font-weight: 900;
+        font-style: italic;
+        letter-spacing: -2px;
+        text-transform: uppercase;
+      }
+    </style>
+    <!-- Soft Neon Glow -->
+    <filter id="iconGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="14" result="blur1" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="28" opacity="0.6" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur2" />
+        <feMergeNode in="blur1" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="textGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8" opacity="0.3" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <g id="FairwayOS-Logo" transform="translate(10, 10)">
+    <!-- Glow Backdrop for the Circular Mark -->
+    <circle cx="105" cy="100" r="70" fill="#a3e635" opacity="0.45" filter="url(#iconGlow)" />
+
+    <!-- Main Circular Mark -->
+    <g id="Mark">
+      <circle cx="105" cy="100" r="70" fill="#a3e635" />
+      <circle cx="105" cy="100" r="22" fill="#022c22" />
+    </g>
+
+    <!-- Wordmark -->
+    <g filter="url(#textGlow)">
+      <text x="215" y="132" font-size="106" class="logo-text">
+        <tspan fill="#ffffff">FAIRWAY</tspan><tspan fill="#a3e635">OS</tspan>
+      </text>
+    </g>
+  </g>
+</svg>
