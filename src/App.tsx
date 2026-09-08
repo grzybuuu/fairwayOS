@@ -4,7 +4,7 @@ import { Cpu, Globe, Trophy, Smartphone, MapPin, Zap, ChevronRight, BarChart3, B
 Database, ShieldCheck, Activity, Target, Layers, Linkedin, ArrowUpRight, Timer, WifiOff,
 TrendingUp, Clock, Users, Network, Brain, Grid, CheckCircle, Crosshair, Loader2, Gamepad2,
 MapIcon, QrCode, Radio, LogIn, ArrowLeft, Lock, Plus, Check, Search, LocateFixed, Wifi, 
-AlertTriangle, Info, X, Flag, UserPlus, History, Mail } from "lucide-react";
+AlertTriangle, Info, X, Flag, UserPlus, History, Mail, ArrowDown } from "lucide-react";
 import { ResponsiveContainer, AreaChart, Area } from "recharts";
 import { useState, useEffect, useRef } from "react";
 import React from "react";
@@ -926,6 +926,16 @@ const PlayerLanding = ({
     setIsLoaded(true);
   }, []);
 
+  const scrollToWaitlist = () => {
+    const el = document.getElementById('waitlist');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => {
+        document.getElementById('waitlist-email')?.focus();
+      }, 500);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if(!email) return;
@@ -1037,9 +1047,20 @@ const PlayerLanding = ({
             </div>
           </div>
 
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-accent/30 bg-golf-accent/5 text-golf-accent text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] mb-4 md:mb-6 shadow-[0_0_15px_rgba(163,230,53,0.2)]">
-            <Zap size={12} /> Early Access Waitlist
-          </div>
+          <button 
+            type="button"
+            onClick={scrollToWaitlist}
+            className="inline-flex items-center gap-2.5 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full border-2 border-golf-accent bg-golf-accent/15 hover:bg-golf-accent text-golf-accent hover:text-golf-dark text-[11px] sm:text-xs font-black uppercase tracking-[0.16em] mb-4 md:mb-6 shadow-[0_0_25px_rgba(163,230,53,0.35)] hover:shadow-[0_0_35px_rgba(163,230,53,0.8)] transition-all duration-300 cursor-pointer active:scale-95 group backdrop-blur-md hover:-translate-y-0.5"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-golf-accent opacity-75 group-hover:bg-golf-dark" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-golf-accent group-hover:bg-golf-dark" />
+            </span>
+            <span>Join Waitlist</span>
+            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-golf-accent/20 group-hover:bg-golf-dark/20 text-golf-accent group-hover:text-golf-dark ml-0.5 transition-colors">
+              <ArrowDown size={12} className="animate-bounce group-hover:translate-y-0.5 transition-transform" />
+            </span>
+          </button>
           <h1 className="text-4xl sm:text-6xl md:text-8xl font-extrabold mb-3 md:mb-4 leading-none selection:bg-white selection:text-black">
             <span className="sr-only">FairwayOS Global Golf E-Sports & Smart Ball Tracking. </span>
             The Future <br />
@@ -1069,7 +1090,7 @@ const PlayerLanding = ({
       </section>
 
       {/* 2. SEKCJA ZBIERANIA LEADÓW (WAITLIST) */}
-      <section className="relative z-10 py-12 md:py-16 px-4 md:px-6 w-full flex flex-col justify-center items-center border-t border-white/5 bg-black/20">
+      <section id="waitlist" className="relative z-10 py-12 md:py-16 px-4 md:px-6 w-full flex flex-col justify-center items-center border-t border-white/5 bg-black/20 scroll-mt-12">
         <div className="max-w-7xl mx-auto w-full flex flex-col items-center">
           <div className="glass-dark p-6 md:p-10 lg:p-12 rounded-[2rem] md:rounded-[2.5rem] border border-white/10 max-w-3xl w-full text-center relative overflow-hidden shadow-2xl">
             <div className="absolute top-0 right-0 w-64 h-64 bg-golf-accent/10 blur-[100px] -z-10" />
@@ -1081,6 +1102,7 @@ const PlayerLanding = ({
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-xl mx-auto">
               <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full">
                 <input 
+                  id="waitlist-email"
                   type="email" 
                   required
                   disabled={status === 'loading' || status === 'success'}
@@ -1155,8 +1177,8 @@ const PlayerLanding = ({
         subtitle="See it in action" 
         title={
           <>
-            Stop searching.{" "}
-            <span className="text-gradient drop-shadow-[0_0_40px_rgba(163,230,53,0.4)]">
+            <span className="block sm:inline">Stop searching.</span>{" "}
+            <span className="block sm:inline text-gradient drop-shadow-[0_0_40px_rgba(163,230,53,0.4)]">
               Start scoring.
             </span>
           </>
@@ -3311,7 +3333,11 @@ export default function App() {
           </div>
           <span className="font-display font-bold text-2xl tracking-tighter uppercase">Fairway<span className="text-golf-accent">OS</span></span>
         </div>
-        <p className="text-white/20 text-[10px] uppercase tracking-[0.5em] mb-4">Deep Tech from Poland | Scaling to USA</p>
+        <p className="text-white/20 text-[10px] uppercase tracking-[0.35em] sm:tracking-[0.5em] mb-4 flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-0">
+          <span>Deep Tech from Poland</span>
+          <span className="hidden sm:inline mx-2.5">|</span>
+          <span>Scaling to USA</span>
+        </p>
         
         <div className="flex flex-col items-center justify-center gap-2 mb-5 text-xs text-white/40">
           <a 
