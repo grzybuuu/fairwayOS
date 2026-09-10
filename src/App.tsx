@@ -1363,6 +1363,75 @@ const AnimatedNumber = ({ value, suffix = "", decimals = 1 }: { value: number, s
   return <span>{display.toFixed(decimals)}{suffix}</span>;
 };
 
+const FoundingTeamSection = ({ showPhoto = false }: { showPhoto?: boolean }) => (
+  <section id="leadership-section" className="py-16 md:py-24 px-4 md:px-6 relative overflow-hidden border-t border-white/5">
+    <div className="absolute inset-0 bg-golf-accent/5 -z-10" />
+    <div className="max-w-7xl mx-auto relative z-10">
+      <div id="leadership" className="max-w-4xl mx-auto">
+        <h3 className="text-xl font-bold mb-10 md:mb-14 uppercase tracking-widest text-golf-accent flex items-center justify-center gap-3">
+          <div className="w-2 h-2 bg-golf-accent rounded-full shadow-[0_0_8px_#a3e635]" />
+          Founding Team
+        </h3>
+
+        {/* Zdjęcie zespołu na Disc Range */}
+        {showPhoto && (
+          <div className="relative w-full max-w-4xl mx-auto rounded-2xl md:rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl glass p-2 md:p-3 mb-12 md:mb-16">
+            <div className="w-full rounded-xl md:rounded-2xl overflow-hidden relative bg-black/50">
+              <img 
+                src="/team.jpg" 
+                alt="FairwayOS Team" 
+                className="w-full h-auto object-cover max-h-[70vh]"
+              />
+            </div>
+          </div>
+        )}
+
+        <div className="grid md:grid-cols-2 gap-10 md:gap-16">
+          <div className="relative group text-center">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <h4 className="text-3xl font-bold transition-colors">Hugo Piber-Dąbrowski</h4>
+              <a href="https://www.linkedin.com/in/hugo-piber-dąbrowski-b4b96231a/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 flex items-center justify-center rounded-full bg-[#0077b5]/10 text-[#0077b5] transition-all hover:bg-[#0077b5] hover:text-white">
+                <Linkedin size={14} />
+              </a>
+            </div>
+            <p className="text-sm text-white/40 uppercase tracking-widest mb-3 font-medium">CEO & R&D Lead | Big Data @ SGH</p>
+            <p className="text-xs text-white/30 mb-6 italic leading-relaxed max-w-sm mx-auto">
+              RL Algorithms for CAPEX optimization & UWB Mesh.
+              <br />
+              Currently Technology Consultant @ EY.
+            </p>
+          </div>
+          <div className="relative group text-center">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <h4 className="text-3xl font-bold transition-colors">Juliusz Grzybowski</h4>
+              <a href="https://www.linkedin.com/in/juliusz-grzybowski/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 flex items-center justify-center rounded-full bg-[#0077b5]/10 text-[#0077b5] transition-all hover:bg-[#0077b5] hover:text-white">
+                <Linkedin size={14} />
+              </a>
+            </div>
+            <p className="text-sm text-white/40 uppercase tracking-widest mb-3 font-medium">COO & Mobile Dev | Big Data @ SGH</p>
+            <p className="text-xs text-white/30 mb-6 italic leading-relaxed max-w-sm mx-auto">
+              Business Analytics & Flutter Developer.
+              <br />
+              Currently Data Analyst @ PAYBACK.
+            </p>
+          </div>
+        </div>
+
+        {/* Centralny kontakt firmowy */}
+        <div className="mt-14 text-center">
+          <a 
+            href="mailto:contact@fairwayos.tech"
+            className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full border border-golf-accent/30 bg-golf-accent/5 hover:bg-golf-accent/15 text-golf-accent text-sm font-mono tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(163,230,53,0.15)] group"
+          >
+            <Mail size={16} className="group-hover:scale-110 transition-transform" />
+            <span>contact@fairwayos.tech</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
 const GameLanding = ({ onBack }: { onBack: () => void }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -1933,48 +2002,63 @@ const GameLanding = ({ onBack }: { onBack: () => void }) => {
       {/* Tło widoczne w całej aplikacji gry */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,rgba(34,211,238,0.1),transparent_80%)] pointer-events-none" />
       
-      {/* HEADER: Wspólny dla obu części (Landing i App Flow) */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 py-4 backdrop-blur-md border-b border-white/5 bg-black/40">
-        <div className="flex items-center gap-3 md:gap-5">
-          <a
-            href="/"
-            onClick={(e) => {
-              e.preventDefault();
-              onBack();
-            }}
-            className="flex items-center gap-2 cursor-pointer group"
-          >
-            <div className="relative">
-              <div className="w-6 h-6 md:w-8 md:h-8 bg-golf-accent rounded-full flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(163,230,53,0.5)] group-hover:scale-105 transition-transform">
-                <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-golf-dark rounded-full shadow-inner" />
-              </div>
-              <div className="absolute inset-0 bg-golf-accent blur-md opacity-30 -z-10" />
-            </div>
-            <span className="font-display font-bold text-lg md:text-xl tracking-tighter text-white">Fairway<span className="text-golf-accent">OS</span></span>
-          </a>
-
-          {['map_create', 'verify', 'auto_mesh', 'target_lock', 'live_match'].includes(appView) && (
-            <button 
-              onClick={() => {
-                setRoomCode(null);
-                setActiveMap(null);
-                setTargetLocation(null);
-                setMatchState('waiting_for_qr');
-                setAppView('map_select');
-                if (user) {
-                  fetch(`${API_URL}/users/${user.id}/rooms`)
-                    .then(res => res.json())
-                    .then(data => setUserRooms(data));
-                }
-              }} 
-              className="flex items-center gap-1.5 text-white/50 hover:text-cyan-400 text-xs font-bold uppercase tracking-widest transition-colors pl-3 md:pl-4 border-l border-white/10"
+      {/* HEADER: Identyczny jak na stronie głównej */}
+      <nav className="fixed top-0 left-0 right-0 z-50 flex flex-col px-4 sm:px-6 py-3.5 sm:py-4 backdrop-blur-lg border-b border-white/5 bg-black/20 gap-3 sm:gap-4 transition-all">
+        <div className="flex justify-between items-center max-w-7xl mx-auto w-full relative">
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-6 z-10">
+            <a
+              href="/"
+              onClick={(e) => {
+                e.preventDefault();
+                onBack();
+              }}
+              className="flex items-center gap-1.5 sm:gap-2 cursor-pointer group"
             >
-              <ArrowLeft size={14} /> Back to Lobby
-            </button>
-          )}
-        </div>
-        <div className="text-white/50 text-[10px] uppercase font-bold tracking-widest font-mono">
-          {user ? `User: ${user.email}` : "Not Authenticated"}
+              <div className="relative">
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-golf-accent rounded-full flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(163,230,53,0.5)] group-hover:scale-105 transition-transform">
+                  <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-golf-dark rounded-full shadow-inner" />
+                </div>
+                <div className="absolute inset-0 bg-golf-accent blur-md opacity-30 -z-10" />
+              </div>
+              <span className="font-display font-bold text-base sm:text-lg md:text-xl tracking-tighter text-white">Fairway<span className="text-golf-accent">OS</span></span>
+            </a>
+
+            {['map_create', 'verify', 'auto_mesh', 'target_lock', 'live_match'].includes(appView) && (
+              <button 
+                onClick={() => {
+                  setRoomCode(null);
+                  setActiveMap(null);
+                  setTargetLocation(null);
+                  setMatchState('waiting_for_qr');
+                  setAppView('map_select');
+                  if (user) {
+                    fetch(`${API_URL}/users/${user.id}/rooms`)
+                      .then(res => res.json())
+                      .then(data => setUserRooms(data));
+                  }
+                }} 
+                className="flex items-center gap-1.5 text-white/50 hover:text-cyan-400 text-xs font-bold uppercase tracking-widest transition-colors pl-3 md:pl-4 border-l border-white/10"
+              >
+                <ArrowLeft size={14} /> Back to Lobby
+              </button>
+            )}
+          </div>
+          
+          <div className="flex items-center gap-2 sm:gap-3 z-10 shrink-0">
+            <a 
+              href="#leadership" 
+              onClick={(e) => {
+                e.preventDefault();
+                const el = document.getElementById('leadership') || document.getElementById('leadership-section');
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+              className="bg-white text-golf-dark px-3.5 sm:px-4 py-1.5 md:px-5 md:py-2 rounded-full font-bold text-[10px] md:text-xs uppercase tracking-widest hover:bg-golf-accent transition-all hover:scale-105 active:scale-95 shadow-lg shadow-white/10 text-center"
+            >
+              Contact
+            </a>
+          </div>
         </div>
       </nav>
 
@@ -2159,33 +2243,8 @@ const GameLanding = ({ onBack }: { onBack: () => void }) => {
                 </div>
               </section>
 
-              {/* SEKCJA TEAM */}
-              <section className="py-16 md:py-20 px-4 md:px-6 relative overflow-hidden bg-black/20 border-t border-white/5 flex flex-col justify-center items-center w-full">
-                <div className="absolute inset-0 bg-golf-accent/5 -z-10" />
-                <div 
-                  className="absolute inset-0 opacity-[0.03] pointer-events-none" 
-                  style={{ backgroundImage: 'radial-gradient(circle, #a3e635 1px, transparent 1px)', backgroundSize: '60px 60px' }} 
-                />
-                
-                <div className="max-w-5xl mx-auto w-full text-center z-10 flex flex-col items-center justify-center">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-golf-accent/30 bg-golf-accent/5 text-golf-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-4 md:mb-6 shadow-[0_0_15px_rgba(163,230,53,0.1)]">
-                    <Users size={12} /> The Team
-                  </div>
-                  <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-10 italic">
-                    Meet the <span className="text-golf-accent">Team.</span>
-                  </h2>
-                  
-                  <div className="relative w-full max-w-4xl rounded-2xl md:rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl glass p-2 md:p-3">
-                    <div className="w-full rounded-xl md:rounded-2xl overflow-hidden relative bg-black/50">
-                      <img 
-                        src="/team.jpg" 
-                        alt="FairwayOS Team" 
-                        className="w-full h-auto object-cover max-h-[75vh]"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </section>
+              {/* UNIFIED TEAM & FOUNDERS SECTION */}
+              <FoundingTeamSection showPhoto={true} />
             </motion.div>
           )}
 
@@ -3260,58 +3319,7 @@ export default function App() {
             )}
 
             {/* 7. LEADERSHIP & INVESTMENT ASK */}
-            <section id="leadership-section" className="py-16 md:py-24 px-4 md:px-6 relative overflow-hidden border-t border-white/5">
-              <div className="absolute inset-0 bg-golf-accent/5 -z-10" />
-              <div className="max-w-7xl mx-auto relative z-10">
-                <div id="leadership" className="max-w-4xl mx-auto">
-                  <h3 className="text-xl font-bold mb-10 md:mb-14 uppercase tracking-widest text-golf-accent flex items-center justify-center gap-3">
-                    <div className="w-2 h-2 bg-golf-accent rounded-full shadow-[0_0_8px_#a3e635]" />
-                    Founding Team
-                  </h3>
-                  <div className="grid md:grid-cols-2 gap-10 md:gap-16">
-                    <div className="relative group text-center">
-                      <div className="flex items-center justify-center gap-3 mb-4">
-                        <h4 className="text-3xl font-bold transition-colors">Hugo Piber-Dąbrowski</h4>
-                        <a href="https://www.linkedin.com/in/hugo-piber-dąbrowski-b4b96231a/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 flex items-center justify-center rounded-full bg-[#0077b5]/10 text-[#0077b5] transition-all hover:bg-[#0077b5] hover:text-white">
-                          <Linkedin size={14} />
-                        </a>
-                      </div>
-                      <p className="text-sm text-white/40 uppercase tracking-widest mb-3 font-medium">CEO & R&D Lead | Big Data @ SGH</p>
-                      <p className="text-xs text-white/30 mb-6 italic leading-relaxed max-w-sm mx-auto">
-                        RL Algorithms for CAPEX optimization & UWB Mesh.
-                        <br />
-                        Currently Technology Consultant @ EY.
-                      </p>
-                    </div>
-                    <div className="relative group text-center">
-                      <div className="flex items-center justify-center gap-3 mb-4">
-                        <h4 className="text-3xl font-bold transition-colors">Juliusz Grzybowski</h4>
-                        <a href="https://www.linkedin.com/in/juliusz-grzybowski/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 flex items-center justify-center rounded-full bg-[#0077b5]/10 text-[#0077b5] transition-all hover:bg-[#0077b5] hover:text-white">
-                          <Linkedin size={14} />
-                        </a>
-                      </div>
-                      <p className="text-sm text-white/40 uppercase tracking-widest mb-3 font-medium">COO & Mobile Dev | Big Data @ SGH</p>
-                      <p className="text-xs text-white/30 mb-6 italic leading-relaxed max-w-sm mx-auto">
-                        Business Analytics & Flutter Developer.
-                        <br />
-                        Currently Data Analyst @ PAYBACK.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Centralny kontakt firmowy */}
-                  <div className="mt-14 text-center">
-                    <a 
-                      href="mailto:contact@fairwayos.tech"
-                      className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full border border-golf-accent/30 bg-golf-accent/5 hover:bg-golf-accent/15 text-golf-accent text-sm font-mono tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(163,230,53,0.15)] group"
-                    >
-                      <Mail size={16} className="group-hover:scale-110 transition-transform" />
-                      <span>contact@fairwayos.tech</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </section>
+            <FoundingTeamSection />
 
           </motion.div>
         ) : (
