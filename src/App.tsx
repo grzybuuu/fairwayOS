@@ -1183,7 +1183,7 @@ const PlayerLanding = ({
             </span>
           </>
         } 
-        videoId="dQw4w9WgXcQ" 
+        videoId="E2QPeE9m4cg" 
       />
 
       {/* 4. SEKCJA CECH */}
@@ -2141,7 +2141,7 @@ const GameLanding = ({ onBack }: { onBack: () => void }) => {
                     <div className="w-full h-full rounded-xl overflow-hidden relative bg-black/50">
                       <iframe 
                         className="absolute top-0 left-0 w-full h-full"
-                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=placeholder" 
+                        src="https://www.youtube-nocookie.com/embed/v8yXY6aCffs?si=placeholder" 
                         title="Setup Instructions" 
                         frameBorder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -3257,7 +3257,7 @@ export default function App() {
                 <YouTubeVideoSection 
                   subtitle="See it in action" 
                   title="A Game Changer" 
-                  videoId="dQw4w9WgXcQ" 
+                  videoId="E2QPeE9m4cg" 
                 />
                 <section id="vision" className="py-16 md:py-20 px-4 md:px-6 relative overflow-hidden bg-golf-dark">
               <div className="absolute top-0 left-0 w-full h-full bg-golf-accent/[0.03] -z-10" />
