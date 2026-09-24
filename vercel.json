@@ -1,5 +1,16 @@
 {
   "installCommand": "npm install --legacy-peer-deps",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "max-image-preview:none"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",

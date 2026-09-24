@@ -3087,11 +3087,11 @@ export default function App() {
 
   // Synchronizacja title i canonical tagu dla SEO
   useEffect(() => {
-    let title = "FairwayOS | The Future of Golf: Smart Balls, UWB Telemetry & E-Sports";
+    let title = "FairwayOS | The Future of Golf";
     let canonical = "https://fairwayos.tech/";
 
     if (currentView === 'game') {
-      title = "FairwayOS | Disc Range - Autonomous Target Lock & Match Radar";
+      title = "Disc Range | Autonomous Target Lock & Match Radar";
       canonical = "https://fairwayos.tech/disc-range";
     } else if (currentView === 'privacy') {
       title = "FairwayOS | Privacy Policy";
